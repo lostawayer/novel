@@ -1,0 +1,17 @@
+springdoc:
+  api-docs:
+    enabled: ${ENV_SPRINGDOC_ENABLED:true}
+    path: /v3/api-docs
+  model-and-view-allowed: ${ENV_SPRINGDOC_ENABLED:true}
+  show-actuator: ${ENV_SPRINGDOC_ENABLED:false}
+  open-api:
+    info:
+      title: 系统管理API
+      description: 系统管理接口
+      version: 1.0
+  swagger-ui:
+    disable-swagger-default-url: true
+    displayRequestDuration: true
+    enabled: ${ENV_SPRINGDOC_ENABLED:true}
+    path: /swagger-ui.html
+    use-root-path: true

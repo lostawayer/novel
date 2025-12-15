@@ -1,0 +1,13 @@
+spring:
+  cache:
+    type: none
+    cache-names: ${spring.application.name}
+    redis:
+      key-prefix: ${spring.application.name} #为缓存的键名添加统一前缀
+  data:
+    redis:
+      database: 0
+      username:
+      port: 6379
+      password: redis
+      host: 192.168.15.138

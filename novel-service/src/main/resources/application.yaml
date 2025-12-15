@@ -1,0 +1,24 @@
+application:
+    version: v1.0
+server:
+    port: 9080
+spring:
+    application:
+        name: medical
+    banner:
+        location: classpath:banner.txt
+    config:
+        import: classpath:config/medical.yaml,classpath:config/springdoc.yaml,classpath:config/datasource.yaml,classpath:config/mybatis.yaml,classpath:config/log.yaml,classpath:config/actuator.yaml,classpath:config/freemarker.yaml,classpath:config/redis.yaml,classpath:config/security.yaml,classpath:config/novel.yaml
+    message:
+        basename: messages
+    web:
+        locale-resolver: accept_header
+    jackson:
+        default-property-inclusion: non_null
+        data-format: yyyy-MM-dd HH:mm:ss
+        time-zone: Asia/Shanghai
+    qingruan:
+        medical:
+            aa: ${spring.application.name}
+
+debug: false

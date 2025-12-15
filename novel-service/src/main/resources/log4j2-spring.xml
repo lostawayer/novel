@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="ERROR" monitorInterval="5">
+    <Properties>
+        <Property name="LOG_ROOT_LEVEL">${spring:logging.level.root}</Property>
+        <Property name="LOG_EXCEPTION_CONVERSION_WORD">${spring:logging.exception-conversion-word}</Property>
+        <Property name="LOG_LEVEL_PATTERN">${spring:logging.pattern.level}</Property>
+        <Property name="LOG_DATEFORMAT_PATTERN">${spring:logging.pattern.dateformat}</Property>
+        <Property name="CONSOLE_LOG_PATTERN">${spring:logging.pattern.console}</Property>
+        <Property name="CONSOLE_LOG_CHARSET">${spring:logging.charset.console}</Property>
+        <Property name="CONSOLE_LOG_THRESHOLD">${spring:logging.threshold.console}</Property>
+        <Property name="FILE_LOG_PATTERN">${spring:logging.pattern.file}</Property>
+        <Property name="FILE_LOG_CHARSET">${spring:logging.charset.file}</Property>
+        <Property name="FILE_LOG_THRESHOLD">${spring:logging.threshold.file}</Property>
+        <Property name="FILE_LOG_SIZE">${spring:logging.size.file}</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="${sys:CONSOLE_LOG_PATTERN}" charset="${sys:CONSOLE_LOG_CHARSET}" />
+            <Filters>
+                <ThresholdFilter level="${sys:CONSOLE_LOG_THRESHOLD}"/>
+            </Filters>
+        </Console>
+        <RollingFile name="RollingFile" fileName="${sys:LOG_FILE}" filePattern="${sys:LOG_PATH}/$${date:yyyy-MM}/app-%d{yyyy-MM-dd-HH}-%i.log.gz">
+            <PatternLayout pattern="${sys:FILE_LOG_PATTERN}" charset="${sys:FILE_LOG_CHARSET}"/>
+            <Filters>
+                <ThresholdFilter level="${sys:FILE_LOG_THRESHOLD}"/>
+            </Filters>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${sys:FILE_LOG_SIZE}" />
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="${LOG_ROOT_LEVEL}">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="RollingFile" />
+        </Root>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,33 @@
+{
+  "name": "novel-front",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "vue": "^3.5.24",
+    "vue-router": "^4.5.0",
+    "pinia": "^2.3.0",
+    "axios": "^1.7.9",
+    "element-plus": "^2.9.2",
+    "@element-plus/icons-vue": "^2.3.1",
+    "@vueup/vue-quill": "^1.2.0",
+    "quill": "^2.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.8.1",
+    "typescript": "~5.9.3",
+    "vite": "^7.2.4",
+    "vue-tsc": "^3.1.4",
+    "sass": "^1.83.4",
+    "unplugin-auto-import": "^0.18.5",
+    "unplugin-vue-components": "^0.27.5"
+  }
+}

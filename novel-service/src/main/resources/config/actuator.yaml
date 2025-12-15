@@ -1,0 +1,14 @@
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
+  endpoints:
+    access:
+      #管理端点访问控制:NONE,READ_ONLY,UNRESTRICTED
+      default: ${ENV_MANAGEMENT_ENDPOINTS_ACCESS:unrestricted}
+    web:
+      base-path: /actuator
+      exposure:
+        include: '*'

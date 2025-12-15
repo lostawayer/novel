@@ -1,0 +1,20 @@
+medical:
+    security:
+        jwt-supoprt: true
+        expiressSecond: 3600
+        no-auth-urls:
+            - /
+            - /swagger-ui/index.html
+            - /swagger-ui.html
+            - /swagger-ui/**
+            - /webjars/**
+            - /v3/api-docs/**
+            - /v3/api-docs
+            - /novel/book/**
+            - /novel/chapter/**
+            - /novel/author/**
+            - /com/**
+        user:
+            username: admin
+            password: admin
+            full-name: 系统管理员

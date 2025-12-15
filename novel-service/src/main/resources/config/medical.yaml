@@ -1,0 +1,8 @@
+medical:
+  com:
+    service:
+      type: userManager1
+      userTask:
+        cron: '*/10 * * * * *'
+    persistence:
+      type: mybatis

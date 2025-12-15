@@ -1,0 +1,13 @@
+mybatis-plus:
+    mybatis-location: classpath*:mapper/**/*.xml
+    global-config:
+        db-config:
+            # 表名不使用驼峰转下划线
+            table-underline: false
+            # 字段名不使用驼峰转下划线
+            column-underline: false
+    configuration:
+        # 日志实现
+        log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+        # 驼峰转下划线关闭
+        map-underscore-to-camel-case: false

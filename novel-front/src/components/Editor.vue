@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue'
 import { QuillEditor } from '@vueup/vue-quill'
-import type { Quill } from 'quill'
+import type Quill from 'quill'
 import { ElMessage } from 'element-plus'
 import { getToken } from '@/common/storage'
 import config from '@/config/config'
@@ -105,7 +105,7 @@ const beforeUpload = (file: File) => {
 }
 
 // 上传成功
-const uploadSuccess = (response: any, file: File) => {
+const uploadSuccess = (response: any) => {
   if (response.code === 0) {
     // 获取编辑器实例
     const quill = editorRef.value?.getQuill() as Quill
@@ -114,7 +114,7 @@ const uploadSuccess = (response: any, file: File) => {
       const range = quill.getSelection()
       const index = range ? range.index : 0
       // 插入图片
-      const imageUrl = config.baseUrl + '/upload/' + response.file
+      const imageUrl = '/' + response.url
       quill.insertEmbed(index, 'image', imageUrl)
       // 调整光标位置
       quill.setSelection(index + 1)

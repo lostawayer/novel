@@ -43,15 +43,15 @@
       </el-form>
 
       <div class="register-links">
-        <router-link
-          v-for="item in roles"
-          :key="item.tableName"
-          v-if="item.hasFrontRegister === '是'"
-          :to="{ path: '/register', query: { role: item.tableName } }"
-          class="register-link"
-        >
-          注册{{ item.roleName }}
-        </router-link>
+        <template v-for="item in roles" :key="item.tableName">
+          <router-link
+            v-if="item.hasFrontRegister === '是'"
+            :to="{ path: '/register', query: { role: item.tableName } }"
+            class="register-link"
+          >
+            注册{{ item.roleName }}
+          </router-link>
+        </template>
       </div>
     </div>
   </div>

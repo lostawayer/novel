@@ -1,0 +1,6 @@
+# 静态资源配置
+spring:
+    web:
+        resources:
+            static-locations:
+                - classpath:/static/

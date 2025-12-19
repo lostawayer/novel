@@ -3,7 +3,7 @@
     <p v-if="msTime.show" style="margin: 0">
       <span v-if="tipShow">{{ tipText }}:</span>
       <span v-if="!tipShow">{{ tipTextEnd }}:</span>
-      <span v-if="msTime.day > 0">
+      <span v-if="Number(msTime.day) > 0">
         <span>{{ msTime.day }}</span>
         <i>{{ dayTxt }}</i>
       </span>

@@ -10,7 +10,7 @@ import type { ApiResponse } from '@/types'
 
 // 创建 axios 实例
 const service: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_URL || 'http://localhost:8088',
+  baseURL: import.meta.env.VITE_APP_BASE_URL || '',
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',

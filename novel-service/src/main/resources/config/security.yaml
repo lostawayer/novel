@@ -10,10 +10,25 @@ medical:
             - /webjars/**
             - /v3/api-docs/**
             - /v3/api-docs
+            # 新版 API
             - /novel/book/**
             - /novel/chapter/**
             - /novel/author/**
-            - /com/**
+            # 管理后台 API (统一前缀)
+            - /api/**
+            - /users/**
+            - /file/**
+            # 静态资源
+            - /upload/**
+            # 前台 API
+            - /xiaoshuoxinxi/**
+            - /xiaoshuoleixing/**
+            - /config/**
+            - /messages/**
+            - /yonghu/**
+            - /zuozhe/**
+            - /news/**
+            - /storeup/**
         user:
             username: admin
             password: admin

@@ -82,14 +82,20 @@ export function checkLogin(): boolean {
 
 /**
  * 获取图片完整路径
- * @param path 图片路径
+ * @param path 图片路径（可能是逗号分隔的多张图片）
  */
 export function getImageUrl(path: string): string {
   if (!path) return ''
-  if (path.startsWith('http://') || path.startsWith('https://')) {
-    return path
+  // 如果有多张图片，取第一张
+  const firstPath = path.split(',')[0].trim()
+  if (firstPath.startsWith('http://') || firstPath.startsWith('https://')) {
+    return firstPath
   }
-  return `http://localhost:8088/${path}`
+  // 开发环境使用代理，直接返回相对路径
+  if (firstPath.startsWith('/')) {
+    return firstPath
+  }
+  return `/${firstPath}`
 }
 
 /**

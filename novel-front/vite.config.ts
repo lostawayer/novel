@@ -27,10 +27,41 @@ export default defineConfig({
   server: {
     port: 8080,
     proxy: {
-      '/api': {
-        target: 'http://localhost:8088',
+      '/novel': {
+        target: 'http://localhost:9080',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+      '/users': {
+        target: 'http://localhost:9080',
+        changeOrigin: true,
+      },
+      '/file': {
+        target: 'http://localhost:9080',
+        changeOrigin: true,
+      },
+      '/upload': {
+        target: 'http://localhost:9080',
+        changeOrigin: true,
+      },
+      '/xiaoshuoxinxi': {
+        target: 'http://localhost:9080',
+        changeOrigin: true,
+      },
+      '/config': {
+        target: 'http://localhost:9080',
+        changeOrigin: true,
+      },
+      '/messages': {
+        target: 'http://localhost:9080',
+        changeOrigin: true,
+      },
+      '/yonghu': {
+        target: 'http://localhost:9080',
+        changeOrigin: true,
+      },
+      '/zuozhe': {
+        target: 'http://localhost:9080',
+        changeOrigin: true,
       },
     },
   },

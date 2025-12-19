@@ -39,13 +39,13 @@ interface Config {
 
 const config: Config = {
   // 开发环境使用代理，生产环境使用实际地址
-  baseUrl: import.meta.env.VITE_APP_BASE_URL || 'http://localhost:8088',
+  baseUrl: import.meta.env.VITE_APP_BASE_URL || '',
 
   projectName: '小说网站系统',
 
   uploadUrl: '/file/upload',
 
-  imagePrefixUrl: 'http://localhost:8088/',
+  imagePrefixUrl: '/',
 
   pageSize: 10,
 

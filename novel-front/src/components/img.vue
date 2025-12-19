@@ -143,7 +143,7 @@ const getCompetence = () => {
           video.srcObject = stream
         } else {
           // 兼容旧浏览器
-          ;(video as any).src = window.URL.createObjectURL(stream)
+          ;(video as any).src = window.URL.createObjectURL(stream as any)
         }
         video.onloadedmetadata = () => {
           video.play()

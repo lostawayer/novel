@@ -34,17 +34,17 @@ export interface PageData<T> {
   total: number
 }
 
-// 分页查询小说
+// 分页查询书籍
 export function getBookPage(params: PageParams) {
   return request.get<CompatResponse<PageData<NovelInfo>>>('/xiaoshuoxinxi/page', { params })
 }
 
-// 获取小说详情
+// 获取书籍详情
 export function getBookById(id: number) {
   return request.get<CompatResponse<NovelInfo>>(`/xiaoshuoxinxi/info/${id}`)
 }
 
-// 新增小说
+// 新增书籍
 export function addBook(data: {
   novelName: string
   categoryName: string
@@ -56,7 +56,7 @@ export function addBook(data: {
   return request.post<CompatResponse<null>>('/xiaoshuoxinxi/save', data)
 }
 
-// 更新小说
+// 更新书籍
 export function updateBook(data: {
   id: number
   novelName?: string
@@ -67,7 +67,7 @@ export function updateBook(data: {
   return request.post<CompatResponse<null>>('/xiaoshuoxinxi/update', data)
 }
 
-// 删除小说
+// 删除书籍
 export function deleteBooks(ids: number[]) {
   return request.post<CompatResponse<null>>('/xiaoshuoxinxi/delete', ids)
 }

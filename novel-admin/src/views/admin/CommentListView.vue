@@ -127,7 +127,7 @@ onMounted(() => loadData())
       >
         <el-table-column type="selection" width="50" />
         <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="NOVEL_NAME" label="小说名称" width="150" />
+        <el-table-column prop="NOVEL_NAME" label="书籍名称" width="150" />
         <el-table-column prop="NICKNAME" label="用户昵称" width="120" />
         <el-table-column prop="CONTENT" label="评论内容" min-width="200" show-overflow-tooltip />
         <el-table-column prop="REPLY" label="回复内容" min-width="150" show-overflow-tooltip />
@@ -160,7 +160,7 @@ onMounted(() => loadData())
     <!-- 详情弹窗 -->
     <el-dialog v-model="detailVisible" title="评论详情" width="600px">
       <el-descriptions v-if="currentRow" :column="1" border>
-        <el-descriptions-item label="小说名称">{{ currentRow.NOVEL_NAME }}</el-descriptions-item>
+        <el-descriptions-item label="书籍名称">{{ currentRow.NOVEL_NAME }}</el-descriptions-item>
         <el-descriptions-item label="用户昵称">{{ currentRow.NICKNAME }}</el-descriptions-item>
         <el-descriptions-item label="评论内容">{{ currentRow.CONTENT }}</el-descriptions-item>
         <el-descriptions-item label="回复内容">{{ currentRow.REPLY || '暂无回复' }}</el-descriptions-item>

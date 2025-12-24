@@ -29,6 +29,10 @@ medical:
             - /zuozhe/**
             - /news/**
             - /storeup/**
+            - /discussxiaoshuoxinxi/**
+            - /chapterxiaoshuoxinxi/**
+            # 选项接口
+            - /option/**
         user:
             username: admin
             password: admin

@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 小说管理服务实现
+ * 书籍管理服务实现
  * 
  * @author Novel Platform Team
  * @date 2024-12-11
@@ -36,11 +36,11 @@ public class BookManager implements IBookManager {
             book.setPublishTime(new Date());
             book.setClickCount(0);
             bookPersistence.save(book);
-            log.info("添加小说成功：" + book.getBookName());
+            log.info("添加书籍成功：" + book.getBookName());
         } else {
             // 更新
             bookPersistence.update(book);
-            log.info("更新小说成功：" + book.getBookName());
+            log.info("更新书籍成功：" + book.getBookName());
         }
     }
 
@@ -59,7 +59,7 @@ public class BookManager implements IBookManager {
     public void deleteBook(Long[] ids) {
         if (ids != null && ids.length > 0) {
             bookPersistence.deleteByIds(ids);
-            log.info("删除小说数量：" + ids.length);
+            log.info("删除书籍数量：" + ids.length);
         }
     }
 

@@ -1,8 +1,8 @@
 novel:
     platform:
-        name: "小说阅读平台"
+        name: "书籍阅读平台"
         version: "1.0.0"
-        description: "基于SpringBoot 3的现代化小说平台"
+        description: "基于SpringBoot 3的现代化书籍平台"
     # 文件上传配置
     upload:
         path: /upload/

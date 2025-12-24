@@ -56,7 +56,7 @@ const routes = [{
       }
       ,{
 	path: '/chapterxiaoshuoxinxi',
-        name: '小说信息章节',
+        name: '书籍信息章节',
         component: chapterxiaoshuoxinxi
       }
       ,{
@@ -81,17 +81,17 @@ const routes = [{
       }
       ,{
 	path: '/xiaoshuoleixing',
-        name: '小说类型',
+        name: '书籍类型',
         component: xiaoshuoleixing
       }
       ,{
 	path: '/discussxiaoshuoxinxi',
-        name: '小说信息评论',
+        name: '书籍信息评论',
         component: discussxiaoshuoxinxi
       }
       ,{
 	path: '/xiaoshuoxinxi',
-        name: '小说信息',
+        name: '书籍信息',
         component: xiaoshuoxinxi
       }
     ]

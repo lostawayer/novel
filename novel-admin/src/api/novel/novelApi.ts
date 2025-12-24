@@ -1,7 +1,7 @@
-import axios from 'axios'
+import request from '@/api/request'
 import type { DataPage } from '@/api/commons/dataPage'
 
-// 小说信息
+// 书籍信息
 export interface Novel {
   id?: number
   bookName: string
@@ -14,7 +14,7 @@ export interface Novel {
   clickCount?: number
 }
 
-// 小说章节
+// 书籍章节
 export interface NovelChapter {
   id?: number
   chapterTitle: string
@@ -25,9 +25,10 @@ export interface NovelChapter {
   authorAccount?: string
   authorName?: string
   publishTime?: string
+  vipOnly?: string // VIP章节标识：是/否
 }
 
-// ========== 小说信息 API ==========
+// ========== 书籍信息 API ==========
 export async function findNovelApi(
   page: number,
   limit: number,
@@ -38,42 +39,62 @@ export async function findNovelApi(
   if (params?.categoryName) queryParams.categoryName = params.categoryName
   if (params?.authorAccount) queryParams.authorAccount = params.authorAccount
 
-  const response = await axios.get(`/novel/book/list`, { params: queryParams })
-  const data = response.data?.data || response.data
-  return {
-    pageNumber: data.pageNumber || page,
-    pageSize: data.pageSize || limit,
-    totalCount: data.totalCount || 0,
-    content: data.content || []
+  const response = await request.get(`/novel/book/list`, { params: queryParams, baseURL: '' })
+  const data = response.data
+  if (data && data.success) {
+    const result = data.data
+    return {
+      pageNumber: result.pageNumber || page,
+      pageSize: result.pageSize || limit,
+      totalCount: result.totalCount || 0,
+      content: result.data || result.content || []
+    }
   }
+  throw new Error(data?.error || '获取数据失败')
 }
 
 export async function getNovelApi(id: number): Promise<Novel> {
-  const response = await axios.get(`/novel/book/get`, {
-    params: { id }
+  const response = await request.get(`/novel/book/get`, {
+    params: { id },
+    baseURL: ''
   })
-  return response.data?.data || response.data
+  const data = response.data
+  if (data && data.success) {
+    return data.data
+  }
+  throw new Error(data?.error || '获取数据失败')
 }
 
 export async function saveOrUpdateNovelApi(novel: Novel): Promise<void> {
-  await axios.post(`/novel/book/add`, novel)
+  const response = await request.post(`/novel/book/add`, novel, { baseURL: '' })
+  if (!response.data?.success) {
+    throw new Error(response.data?.error || '操作失败')
+  }
 }
 
 export async function deleteNovelApi(ids: number[]): Promise<void> {
   const params = new URLSearchParams()
   ids.forEach((id) => params.append('ids', String(id)))
-  await axios.delete(`/novel/book/delete?${params.toString()}`)
+  const response = await request.delete(`/novel/book/delete?${params.toString()}`, { baseURL: '' })
+  if (!response.data?.success) {
+    throw new Error(response.data?.error || '删除失败')
+  }
 }
 
-// 获取作者的所有小说
+// 获取作者的所有书籍
 export async function getNovelsByAuthorApi(authorAccount: string): Promise<Novel[]> {
-  const response = await axios.get(`/novel/book/listByAuthor`, {
-    params: { authorAccount }
+  const response = await request.get(`/novel/book/listByAuthor`, {
+    params: { authorAccount },
+    baseURL: ''
   })
-  return response.data?.data || response.data || []
+  const data = response.data
+  if (data && data.success) {
+    return data.data || []
+  }
+  throw new Error(data?.error || '获取数据失败')
 }
 
-// ========== 小说章节 API ==========
+// ========== 书籍章节 API ==========
 export async function findChapterApi(
   page: number,
   limit: number,
@@ -82,37 +103,57 @@ export async function findChapterApi(
   const params: any = { pageNumber: page, pageSize: limit }
   if (bookId) params.bookId = bookId
 
-  const response = await axios.get(`/novel/chapter/list`, { params })
-  const data = response.data?.data || response.data
-  return {
-    pageNumber: data.pageNumber || page,
-    pageSize: data.pageSize || limit,
-    totalCount: data.totalCount || 0,
-    content: data.content || []
+  const response = await request.get(`/novel/chapter/list`, { params, baseURL: '' })
+  const data = response.data
+  if (data && data.success) {
+    const result = data.data
+    return {
+      pageNumber: result.pageNumber || page,
+      pageSize: result.pageSize || limit,
+      totalCount: result.totalCount || 0,
+      content: result.data || result.content || []
+    }
   }
+  throw new Error(data?.error || '获取数据失败')
 }
 
 export async function getChapterApi(id: number): Promise<NovelChapter> {
-  const response = await axios.get(`/novel/chapter/get`, {
-    params: { id }
+  const response = await request.get(`/novel/chapter/get`, {
+    params: { id },
+    baseURL: ''
   })
-  return response.data?.data || response.data
+  const data = response.data
+  if (data && data.success) {
+    return data.data
+  }
+  throw new Error(data?.error || '获取数据失败')
 }
 
 export async function saveOrUpdateChapterApi(chapter: NovelChapter): Promise<void> {
-  await axios.post(`/novel/chapter/add`, chapter)
+  const response = await request.post(`/novel/chapter/add`, chapter, { baseURL: '' })
+  if (!response.data?.success) {
+    throw new Error(response.data?.error || '操作失败')
+  }
 }
 
 export async function deleteChapterApi(ids: number[]): Promise<void> {
   const params = new URLSearchParams()
   ids.forEach((id) => params.append('ids', String(id)))
-  await axios.delete(`/novel/chapter/delete?${params.toString()}`)
+  const response = await request.delete(`/novel/chapter/delete?${params.toString()}`, { baseURL: '' })
+  if (!response.data?.success) {
+    throw new Error(response.data?.error || '删除失败')
+  }
 }
 
-// 获取小说的所有章节（不分页）
+// 获取书籍的所有章节（不分页）
 export async function getChaptersByBookApi(bookId: number): Promise<NovelChapter[]> {
-  const response = await axios.get(`/novel/chapter/listByBook`, {
-    params: { bookId }
+  const response = await request.get(`/novel/chapter/listByBook`, {
+    params: { bookId },
+    baseURL: ''
   })
-  return response.data?.data || response.data || []
+  const data = response.data
+  if (data && data.success) {
+    return data.data || []
+  }
+  throw new Error(data?.error || '获取数据失败')
 }

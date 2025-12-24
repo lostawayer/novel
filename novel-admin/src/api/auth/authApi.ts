@@ -1,4 +1,4 @@
-import axios from 'axios'
+import request from '@/api/request'
 
 export interface LoginParams {
   account: string
@@ -29,58 +29,67 @@ export interface AdminUser {
 
 // 作者登录
 export async function loginApi(params: LoginParams): Promise<Author> {
-  const response = await axios.post(`/novel/author/login`, null, {
+  const response = await request.post('/novel/author/login', null, {
     params: {
       account: params.account,
       password: params.password
-    }
+    },
+    baseURL: '' // 直接请求 /novel/author/login
   })
-  if (response.data && response.data.success) {
-    return response.data.data
+  const data = response.data
+  if (data && data.success) {
+    return data.data
   }
-  throw new Error(response.data?.error || '登录失败')
+  throw new Error(data?.error || '登录失败')
 }
 
 // 管理员登录
 export async function adminLoginApi(params: AdminLoginParams): Promise<AdminUser> {
-  const response = await axios.post(`/users/login`, null, {
+  const response = await request.post('/users/login', null, {
     params: {
       username: params.username,
       password: params.password
-    }
+    },
+    baseURL: '' // 管理员登录不需要 /api 前缀
   })
-  if (response.data && response.data.code === 0) {
+  const data = response.data
+  if (data && data.code === 0) {
     return {
-      id: response.data.data?.id || 0,
+      id: data.data?.id || 0,
       username: params.username,
-      token: response.data.token
+      token: data.token
     }
   }
-  throw new Error(response.data?.msg || '登录失败')
+  throw new Error(data?.msg || '登录失败')
 }
 
 // 获取作者信息
 export async function getAuthorInfoApi(account: string): Promise<Author> {
-  const response = await axios.get(`/novel/author/get`, {
-    params: { account }
+  const response = await request.get('/novel/author/get', {
+    params: { account },
+    baseURL: ''
   })
-  if (response.data && response.data.success) {
-    return response.data.data
+  const data = response.data
+  if (data && data.success) {
+    return data.data
   }
-  throw new Error(response.data?.error || '获取信息失败')
+  throw new Error(data?.error || '获取信息失败')
 }
 
 // 检查账号是否存在
 export async function checkAccountExistsApi(account: string): Promise<boolean> {
-  const response = await axios.get(`/novel/author/exists`, {
-    params: { account }
+  const response = await request.get('/novel/author/exists', {
+    params: { account },
+    baseURL: ''
   })
   return response.data?.data || false
 }
 
 // 更新作者信息
 export async function updateAuthorInfoApi(data: Partial<Author>): Promise<void> {
-  const response = await axios.post(`/novel/author/add`, data)
+  const response = await request.post('/novel/author/add', data, {
+    baseURL: ''
+  })
   if (!response.data?.success) {
     throw new Error(response.data?.error || '更新失败')
   }

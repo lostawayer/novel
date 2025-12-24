@@ -77,10 +77,10 @@ export interface Author {
   money?: number
 }
 
-// ==================== 小说相关 ====================
+// ==================== 书籍相关 ====================
 
 /**
- * 小说分类
+ * 书籍分类
  */
 export interface NovelCategory {
   id?: number
@@ -88,7 +88,7 @@ export interface NovelCategory {
 }
 
 /**
- * 小说信息
+ * 书籍信息
  */
 export interface Novel {
   id?: number
@@ -105,14 +105,14 @@ export interface Novel {
 }
 
 /**
- * 小说详情
+ * 书籍详情
  */
 export interface NovelDetail extends Novel {
   chapters?: Chapter[]
 }
 
 /**
- * 小说章节
+ * 书籍章节
  */
 export interface Chapter {
   id?: number

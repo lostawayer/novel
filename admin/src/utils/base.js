@@ -9,7 +9,7 @@ const base = {
     },
     getProjectName(){
         return {
-            projectName: "基于Springboot小说网站系统的设计与实现"
+            projectName: "基于Springboot“文趣阁”阅读平台的设计与实现"
         } 
     }
 }

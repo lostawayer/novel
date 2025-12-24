@@ -5,12 +5,12 @@
 			<el-form class="center-form-pv" :style='{"margin":"0 0 20px"}' :inline="true" :model="searchForm">
 				<el-row :style='{"textAlign":"right","display":"block"}' >
 					<div :style='{"margin":"0 20px 0 0","display":"inline-block"}'>
-						<label :style='{"margin":"0 10px 0 0","color":"#000","display":"inline-block","lineHeight":"40px","fontSize":"14px","fontWeight":"500","height":"40px"}' class="item-label">小说名称</label>
-						<el-input v-model="searchForm.xiaoshuomingcheng" placeholder="小说名称" clearable></el-input>
+						<label :style='{"margin":"0 10px 0 0","color":"#000","display":"inline-block","lineHeight":"40px","fontSize":"14px","fontWeight":"500","height":"40px"}' class="item-label">书籍名称</label>
+						<el-input v-model="searchForm.xiaoshuomingcheng" placeholder="书籍名称" clearable></el-input>
 					</div>
-					<div :style='{"margin":"0 20px 0 0","display":"inline-block"}' class="select" label="小说类型" prop="xiaoshuoleixing">
-						<label :style='{"margin":"0 10px 0 0","color":"#000","display":"inline-block","lineHeight":"40px","fontSize":"14px","fontWeight":"500","height":"40px"}' class="item-label">小说类型</label>
-						<el-select  @change="xiaoshuoleixingChange" clearable v-model="searchForm.xiaoshuoleixing" placeholder="请选择小说类型">
+					<div :style='{"margin":"0 20px 0 0","display":"inline-block"}' class="select" label="书籍类型" prop="xiaoshuoleixing">
+						<label :style='{"margin":"0 10px 0 0","color":"#000","display":"inline-block","lineHeight":"40px","fontSize":"14px","fontWeight":"500","height":"40px"}' class="item-label">书籍类型</label>
+						<el-select  @change="xiaoshuoleixingChange" clearable v-model="searchForm.xiaoshuoleixing" placeholder="请选择书籍类型">
 							<el-option v-for="(item,index) in xiaoshuoleixingOptions" v-bind:key="index" :label="item" :value="item"></el-option>
 						</el-select>
 					</div>
@@ -43,14 +43,14 @@
 					<el-table-column :resizable='true' :sortable='true' label="索引" type="index" width="50" />
 					<el-table-column :resizable='true' :sortable='true'  
 						prop="xiaoshuomingcheng"
-					label="小说名称">
+					label="书籍名称">
 						<template slot-scope="scope">
 							{{scope.row.xiaoshuomingcheng}}
 						</template>
 					</el-table-column>
 					<el-table-column :resizable='true' :sortable='true'  
 						prop="xiaoshuoleixing"
-					label="小说类型">
+					label="书籍类型">
 						<template slot-scope="scope">
 							{{scope.row.xiaoshuoleixing}}
 						</template>

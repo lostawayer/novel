@@ -2,11 +2,11 @@ import request from '@/api/request'
 
 export interface News {
   id: number
-  TITLE: string
-  INTRODUCTION?: string
-  PICTURE?: string
-  CONTENT?: string
-  ADD_TIME?: string
+  title: string
+  introduction?: string
+  picture?: string
+  content?: string
+  addtime?: string
 }
 
 export interface PageParams {

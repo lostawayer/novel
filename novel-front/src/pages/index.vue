@@ -3,16 +3,22 @@
     <!-- 顶部导航 -->
     <div class="top-header">
       <div class="header-content">
-        <div class="site-title">小说网站系统</div>
+        <div class="site-title">文趣阁</div>
         <div class="user-info">
-          <span v-if="userStore.isLoggedIn" class="username">{{ userStore.username }}</span>
-          <el-button v-if="!userStore.isLoggedIn" @click="toLogin" size="small">
-            登录/注册
+          <span v-if="userStore.isLoggedIn" class="username">欢迎，{{ userStore.username }}</span>
+          <el-button v-if="!userStore.isLoggedIn" @click="showLogin" size="small">
+            登录
           </el-button>
-          <el-button v-else @click="handleLogout" size="small">退出</el-button>
+          <el-button v-if="!userStore.isLoggedIn" @click="showRegister" size="small" type="primary">
+            注册
+          </el-button>
+          <el-button v-if="userStore.isLoggedIn" @click="handleLogout" size="small">退出</el-button>
         </div>
       </div>
     </div>
+
+    <!-- 登录弹窗 -->
+    <LoginDialog ref="loginDialogRef" @success="onLoginSuccess" />
 
     <!-- 主导航菜单 -->
     <div class="main-nav">
@@ -21,6 +27,7 @@
         :default-active="activeIndex"
         @select="handleSelect"
         :router="true"
+        :ellipsis="false"
       >
         <el-menu-item
           v-for="(menu, index) in menuList"
@@ -29,6 +36,13 @@
           :route="menu.url"
         >
           {{ menu.name }}
+        </el-menu-item>
+        <el-menu-item
+          v-if="userStore.isLoggedIn"
+          :index="'storeup'"
+          :route="'/index/storeup'"
+        >
+          我的收藏
         </el-menu-item>
         <el-menu-item
           v-if="userStore.isLoggedIn && userStore.role !== 'users'"
@@ -56,19 +70,20 @@
 
     <!-- 底部 -->
     <div class="footer">
-      <p>© 2024 小说网站系统 All Rights Reserved</p>
+      <p>© 2024 文趣阁 All Rights Reserved</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { get } from '@/utils/request'
 import { getImageUrl } from '@/common/system'
 import { removeToken, removeUserInfo, removeRole } from '@/common/storage'
 import { useUserStore } from '@/store'
+import LoginDialog from '@/components/LoginDialog.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -76,20 +91,46 @@ const userStore = useUserStore()
 
 const activeIndex = ref('0')
 const carouselList = ref<any[]>([])
+const loginDialogRef = ref<InstanceType<typeof LoginDialog>>()
 const menuList = ref<any[]>([
   { name: '首页', url: '/index/home' },
-  { name: '小说列表', url: '/index/xiaoshuoxinxi' },
+  { name: '书籍列表', url: '/index/xiaoshuoxinxi' },
   { name: '公告信息', url: '/index/news' },
 ])
+
+// 监听路由变化，如果需要登录则弹出登录框
+watch(
+  () => route.query.needLogin,
+  (needLogin) => {
+    if (needLogin === '1' && !userStore.isLoggedIn) {
+      setTimeout(() => {
+        loginDialogRef.value?.show('login')
+      }, 100)
+      // 清除query参数
+      router.replace({ query: {} })
+    }
+  },
+  { immediate: true }
+)
 
 // 菜单选择
 const handleSelect = (key: string, keyPath: string[]) => {
   activeIndex.value = key
 }
 
-// 登录
-const toLogin = () => {
-  router.push('/login')
+// 显示登录弹窗
+const showLogin = () => {
+  loginDialogRef.value?.show('login')
+}
+
+// 显示注册弹窗
+const showRegister = () => {
+  loginDialogRef.value?.show('register')
+}
+
+// 登录成功回调
+const onLoginSuccess = () => {
+  // 刷新当前页面数据
 }
 
 // 退出登录
@@ -108,7 +149,9 @@ const handleLogout = async () => {
     userStore.clearUserInfo()
 
     ElMessage.success('退出成功')
-    router.push('/login')
+    
+    // 跳转到首页
+    router.push('/index/home')
   } catch (error) {
     // 取消退出
   }
@@ -143,47 +186,80 @@ onMounted(() => {
 }
 
 .top-header {
-  background: #434343;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #fff;
-  height: 60px;
+  height: 50px;
   display: flex;
   align-items: center;
-  padding: 0 5%;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .header-content {
   width: 100%;
+  max-width: 1200px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 20px;
 }
 
 .site-title {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 2px;
 }
 
 .user-info {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 
   .username {
-    margin-right: 10px;
+    font-size: 14px;
+    opacity: 0.95;
+  }
+
+  :deep(.el-button) {
+    border-radius: 20px;
+    padding: 8px 20px;
   }
 }
 
 .main-nav {
   background: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: center;
 
   :deep(.el-menu) {
     border-bottom: none;
+    background: transparent;
+    width: auto;
   }
 
   :deep(.el-menu-item) {
-    font-size: 16px;
-    padding: 0 30px;
+    font-size: 15px;
+    padding: 0 28px;
+    height: 55px;
+    line-height: 55px;
+    color: #333;
+    transition: all 0.3s;
+    
+    &:hover {
+      color: #667eea;
+      background: rgba(102, 126, 234, 0.08);
+    }
+    
+    &.is-active {
+      color: #667eea;
+      border-bottom: 3px solid #667eea;
+      background: transparent;
+    }
+  }
+
+  :deep(.el-sub-menu__icon-more) {
+    display: none;
   }
 }
 

@@ -1,21 +1,26 @@
 <template>
   <div class="novel-list-container">
     <div class="novel-box">
-      <h2>小说列表</h2>
+      <h2>书籍列表</h2>
 
       <!-- 搜索区域 -->
       <el-form :inline="true" class="search-form">
-        <el-form-item label="小说名称">
+        <el-form-item label="书籍名称">
           <el-input
             v-model="searchForm.xiaoshuomingcheng"
-            placeholder="请输入小说名称"
+            placeholder="请输入书籍名称"
             clearable
           />
         </el-form-item>
-        <el-form-item label="小说类型">
-          <el-select v-model="searchForm.xiaoshuoleixing" placeholder="请选择" clearable>
+        <el-form-item label="书籍类型">
+          <el-select v-model="searchForm.xiaoshuoleixing" placeholder="请选择" clearable class="category-select">
             <el-option label="全部" value="" />
-            <!-- 可以从接口获取类型列表 -->
+            <el-option 
+              v-for="item in categoryList" 
+              :key="item.id" 
+              :label="item.name" 
+              :value="item.name" 
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -24,7 +29,7 @@
         </el-form-item>
       </el-form>
 
-      <!-- 小说列表 -->
+      <!-- 书籍列表 -->
       <div class="novel-grid" v-loading="loading">
         <div
           v-for="item in list"
@@ -64,6 +69,7 @@ const router = useRouter()
 
 const loading = ref(false)
 const list = ref<any[]>([])
+const categoryList = ref<any[]>([])
 const page = ref(1)
 const limit = ref(12)
 const total = ref(0)
@@ -72,6 +78,18 @@ const searchForm = reactive({
   xiaoshuomingcheng: '',
   xiaoshuoleixing: '',
 })
+
+// 获取书籍类型列表
+const getCategoryList = async () => {
+  try {
+    const res = await get('/xiaoshuoxinxi/categories')
+    if (res.code === 0 && res.data) {
+      categoryList.value = res.data
+    }
+  } catch (error) {
+    console.error('获取类型列表失败:', error)
+  }
+}
 
 // 获取列表
 const getList = async () => {
@@ -117,6 +135,7 @@ const toDetail = (item: any) => {
 }
 
 onMounted(() => {
+  getCategoryList()
   getList()
 })
 </script>
@@ -138,6 +157,10 @@ onMounted(() => {
 
 .search-form {
   margin-bottom: 20px;
+  
+  .category-select {
+    min-width: 90px;
+  }
 }
 
 .novel-grid {

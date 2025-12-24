@@ -9,22 +9,21 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 /**
- * 前台配置接口 - 轮播图等
+ * 配置前台接口
  */
 @RestController
 @RequestMapping("/config")
-@Tag(name = "前台-配置", description = "前台配置接口")
-public class FrontConfigController {
+@Tag(name = "配置接口", description = "轮播图等配置")
+public class ConfigFrontController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @GetMapping("/list")
-    @Operation(summary = "配置列表(轮播图)")
+    @Operation(summary = "配置列表")
     public Map<String, Object> list(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int limit,
-            @RequestParam(defaultValue = "id") String sort) {
+            @RequestParam(defaultValue = "10") int limit) {
         
         List<Map<String, Object>> list = jdbcTemplate.queryForList(
             "SELECT id, NAME as name, VALUE as value FROM system_config ORDER BY id LIMIT ? OFFSET ?",
@@ -32,12 +31,6 @@ public class FrontConfigController {
         
         Integer total = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM system_config", Integer.class);
         
-        Map<String, Object> result = new HashMap<>();
-        result.put("code", 0);
-        Map<String, Object> data = new HashMap<>();
-        data.put("list", list);
-        data.put("total", total != null ? total : 0);
-        result.put("data", data);
-        return result;
+        return FrontResult.page(list, total != null ? total : 0);
     }
 }

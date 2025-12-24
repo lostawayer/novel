@@ -11,7 +11,7 @@
  Target Server Version : 80021 (8.0.21)
  File Encoding         : 65001
 
- Date: 12/12/2025 17:48:18
+ Date: 23/12/2025 23:22:39
 */
 
 SET NAMES utf8mb4;
@@ -33,7 +33,7 @@ CREATE TABLE `admin_user`  (
 -- ----------------------------
 -- Records of admin_user
 -- ----------------------------
-INSERT INTO `admin_user` VALUES (1, 'java1234', '123456', '管理员', '2025-03-19 11:19:27');
+INSERT INTO `admin_user` VALUES (1, '111', '111', '管理员', '2025-03-19 11:19:27');
 INSERT INTO `admin_user` VALUES (2, 'admin', '{bcrypt}$2a$10$OedMXjibvKekhMaNf9eXu.Yf5tSIyiYpyI87HUxUS0OaKtzSWTu/C', '管理员', '2025-12-11 18:43:49');
 
 -- ----------------------------
@@ -87,14 +87,14 @@ CREATE TABLE `author`  (
 -- ----------------------------
 -- Records of author
 -- ----------------------------
-INSERT INTO `author` VALUES (21, '2025-03-19 11:19:26', '账号1', '123456', '作者姓名1', '男', 'upload/zuozhe_touxiang1.jpg', '年龄1', '440300199101010001', '13823888881', '773890001@qq.com', '是', '');
-INSERT INTO `author` VALUES (22, '2025-03-19 11:19:26', '账号2', '123456', '作者姓名2', '男', 'upload/zuozhe_touxiang2.jpg', '年龄2', '440300199202020002', '13823888882', '773890002@qq.com', '是', '');
-INSERT INTO `author` VALUES (23, '2025-03-19 11:19:26', '账号3', '123456', '作者姓名3', '男', 'upload/zuozhe_touxiang3.jpg', '年龄3', '440300199303030003', '13823888883', '773890003@qq.com', '是', '');
-INSERT INTO `author` VALUES (24, '2025-03-19 11:19:26', '账号4', '123456', '作者姓名4', '男', 'upload/zuozhe_touxiang4.jpg', '年龄4', '440300199404040004', '13823888884', '773890004@qq.com', '是', '');
-INSERT INTO `author` VALUES (25, '2025-03-19 11:19:26', '账号5', '123456', '作者姓名5', '男', 'upload/zuozhe_touxiang5.jpg', '年龄5', '440300199505050005', '13823888885', '773890005@qq.com', '是', '');
-INSERT INTO `author` VALUES (26, '2025-03-19 11:19:26', '账号6', '123456', '作者姓名6', '男', 'upload/zuozhe_touxiang6.jpg', '年龄6', '440300199606060006', '13823888886', '773890006@qq.com', '是', '');
-INSERT INTO `author` VALUES (27, '2025-03-19 11:19:26', '账号7', '123456', '作者姓名7', '男', 'upload/zuozhe_touxiang7.jpg', '年龄7', '440300199707070007', '13823888887', '773890007@qq.com', '是', '');
-INSERT INTO `author` VALUES (28, '2025-03-19 11:19:26', '1', '1', '王慧', '女', 'upload/zuozhe_touxiang8.jpg', '35', '440300199808080008', '13823888888', '773890008@qq.com', '是', '正常');
+INSERT INTO `author` VALUES (21, '2025-12-04 11:19:26', '账号1', '123456', '作者姓名1', '男', 'upload/zuozhe_touxiang1.jpg', '年龄1', '440300199101010001', '18577537750', 'hiikok@foxmail.com', '是', '');
+INSERT INTO `author` VALUES (22, '2025-12-04 11:19:26', '账号2', '123456', '作者姓名2', '男', 'upload/zuozhe_touxiang2.jpg', '年龄2', '440300199202020002', '18577537750', 'hiikok@foxmail.com', '是', '');
+INSERT INTO `author` VALUES (23, '2025-12-04 11:19:26', '账号3', '123456', '作者姓名3', '男', 'upload/zuozhe_touxiang3.jpg', '年龄3', '440300199303030003', '18577537750', 'hiikok@foxmail.com', '是', '');
+INSERT INTO `author` VALUES (24, '2025-12-04 11:19:26', '账号4', '123456', '作者姓名4', '男', 'upload/zuozhe_touxiang4.jpg', '年龄4', '440300199404040004', '18577537750', 'hiikok@foxmail.com', '是', '');
+INSERT INTO `author` VALUES (25, '2025-12-04 11:19:26', '账号5', '123456', '作者姓名5', '男', 'upload/zuozhe_touxiang5.jpg', '年龄5', '440300199505050005', '18577537750', 'hiikok@foxmail.com', '是', '');
+INSERT INTO `author` VALUES (26, '2025-12-04 11:19:26', '账号6', '123456', '作者姓名6', '男', 'upload/zuozhe_touxiang6.jpg', '年龄6', '440300199606060006', '18577537750', 'hiikok@foxmail.com', '是', '');
+INSERT INTO `author` VALUES (27, '2025-12-04 11:19:26', '账号7', '123456', '作者姓名7', '男', 'upload/zuozhe_touxiang7.jpg', '年龄7', '440300199707070007', '18577537750', 'hiikok@foxmail.com', '是', '');
+INSERT INTO `author` VALUES (28, '2025-12-04 11:19:26', '111', '111', '李忠海', '男', 'upload/zuozhe_touxiang8.jpg', '24', '440300199808080008', '18577537750', 'hiikok@foxmail.com', '是', '正常');
 
 -- ----------------------------
 -- Table structure for message_board
@@ -133,21 +133,21 @@ DROP TABLE IF EXISTS `novel_category`;
 CREATE TABLE `novel_category`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
   `ADD_TIME` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `CATEGORY_NAME` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '小说类型',
+  `CATEGORY_NAME` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍类型',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `UK_CATEGORY_NAME`(`CATEGORY_NAME` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '小说类型' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 39 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '书籍类型' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of novel_category
 -- ----------------------------
-INSERT INTO `novel_category` VALUES (31, '2025-03-19 11:19:26', '小说类型1');
-INSERT INTO `novel_category` VALUES (32, '2025-03-19 11:19:26', '小说类型2');
-INSERT INTO `novel_category` VALUES (33, '2025-03-19 11:19:26', '小说类型3');
-INSERT INTO `novel_category` VALUES (34, '2025-03-19 11:19:26', '小说类型4');
-INSERT INTO `novel_category` VALUES (35, '2025-03-19 11:19:26', '小说类型5');
-INSERT INTO `novel_category` VALUES (36, '2025-03-19 11:19:26', '小说类型6');
-INSERT INTO `novel_category` VALUES (37, '2025-03-19 11:19:26', '小说类型7');
+INSERT INTO `novel_category` VALUES (31, '2025-03-19 11:19:26', '书籍类型1');
+INSERT INTO `novel_category` VALUES (32, '2025-03-19 11:19:26', '书籍类型2');
+INSERT INTO `novel_category` VALUES (33, '2025-03-19 11:19:26', '书籍类型3');
+INSERT INTO `novel_category` VALUES (34, '2025-03-19 11:19:26', '书籍类型4');
+INSERT INTO `novel_category` VALUES (35, '2025-03-19 11:19:26', '书籍类型5');
+INSERT INTO `novel_category` VALUES (36, '2025-03-19 11:19:26', '书籍类型6');
+INSERT INTO `novel_category` VALUES (37, '2025-03-19 11:19:26', '书籍类型7');
 INSERT INTO `novel_category` VALUES (38, '2025-03-19 11:19:26', '热血');
 
 -- ----------------------------
@@ -163,7 +163,7 @@ CREATE TABLE `novel_chapter`  (
   `CONTENT` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '章节内容',
   `VIP_READ` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '否' COMMENT '会员阅读',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1681903893099 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '小说信息章节表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1681903893099 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '书籍信息章节表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of novel_chapter
@@ -176,7 +176,7 @@ INSERT INTO `novel_chapter` VALUES (95, '2025-03-19 11:19:26', 41, 5, '第五章
 INSERT INTO `novel_chapter` VALUES (96, '2025-03-19 11:19:26', 41, 6, '第六章 势利', '<p> 铁柱沉默，王卓在一旁讥讽道：“这小子我早就说了，没那块料，现在可好，白白去丢人显眼，我是第一次测试就被收取了，没看到他后面几次测试，不过听说是三项测试没一个合格的，早听我的，都不如不去，我约莫四叔家的虎子去都比他强。”</p><p> 铁柱的四叔，眉头一皱，喝道：“王卓，即便你成为仙人，也别在我面前放肆。我家虎子有没有那块料，该你屁事，没大没小的。”</p><p> 王卓目中寒光一闪，冷笑几句没有说话。</p><p> 铁柱的父亲，一下子似乎苍老了十多岁，瘫坐在椅子上。铁柱母亲，也是怔住了，似乎不敢相信，问道：“铁柱……是……是真的么？”</p><p> 铁柱紧咬下唇，浑不在意鲜血留下，噗通一声跪在地上，重重的磕了几个头，低声说道：“爹，娘，铁柱没被仙人收入，对不起你们……我……我来生再报你们养育之恩。”</p><p> 铁柱他娘察觉到自己孩子语气的绝望，立刻跑过去，把铁柱抱起，呜咽道：“娃儿，没事，不用难过，不就是没被仙人收入么，等明年咱们去县里大考，也是一样，娃儿，你可千万别做傻事，想开点，你爹和娘以后还指望你送终呢。”</p><p> 铁柱他爹此时也恢复过来，看着铁柱的神情，内心一震，连忙过去抱着铁柱，焦急的说道：“铁柱，你可别做傻事，一切有爹呢，听爹的话，咱回家好好读书，明年大考也是一样。”</p><p> 四周的亲戚，一个个嘴脸变的极快，纷纷远离铁柱爹娘，脸上均露出看热闹的神态，闲言碎语，议论纷纷。</p><p> “铁柱这孩子，我之前就觉得不行，他怎么能和大哥家的王卓比啊，这次算是丢人丢到家了。”铁柱父亲的六弟，嘲讽道。</p><p> “就是，早知道是这样，就别弄的好像真的被收入似的，多丢人啊，老二，你都这么大年纪的人了，怎么尽办些蠢事，难怪当初你爹没把家产分给你。”铁柱父亲的三叔，面露厌恶之色，讥讽道。</p><p> “要我说，这孩子从小聪明这事，十有八九是假的，估计是老二觉得自己这辈子没啥出息，所以把自己娃娃一顿吹嘘，现在可好，被揭穿了吧。”刚才坐在铁柱父亲身边的五叔，嘴脸立刻变换，一改刚才阿谀之色。</p><p> “三个娃娃去测试，就他一人儿失败，铁柱这孩子，是咱们王家最差的一个了，丢人啊，二嫂子啊，刚才我还说你和二哥在一起享福，现在一看，你这辈子也就这样了，没那个福气。”女眷中有人嘲讽道。</p><p> “可不是么，前几天我还去他们村里看到铁柱了，当时我就寻思着这孩子傻啦吧唧的，怎么能和王卓和王浩那两个娃娃比，准成不了。”铁柱的五叔嫂，也换上嘴脸，讥讽起来。</p><p> “我早就看出铁柱这娃娃不行，你们看看他爹他娘，就那样还能生出个什么好娃子呢，咱们王家，也就大哥和老三家的孩子有出息，铁柱，呸，就这名字看起来就傻里傻气的。”女眷中另一人，也不甘落后嘲讽道。</p><p> “我刚才是瞎了眼了，还要把自己闺女往火坑里推，幸好这铁柱没被仙人收入，不然我闺女以后还不得恨我一辈子啊，铁柱他娘，亲家这事，咱就这么算了，你家娃娃既然当不成仙人，谁会把闺女许给他啊，这不是癞蛤蟆想吃天鹅肉么。”</p><p> 一时之间，几乎所有的亲戚都一个个露出势利的嘴脸，各种恶毒的话语越来越严重，无情的打击着铁柱一家人。</p><p> 这一幕，与刚才的奉承相比，天地之差。更有甚者，干脆撕破脸皮直接开口就索要之前赠送的礼品，听的铁柱爹娘面无血色，王林握紧了拳头，内心的伤痛，更加剧烈，他仿佛有一种要死了的感觉，耳边传来的尽是嘲讽的话语。</p><p> 王卓的父亲，内心冷笑，漫不经心的说道：“老二，之前我就说了，仙人收徒讲究缘分，要求很严格的，除非像我儿子这样优秀，否则根本就没有半点机会，你可倒好，还真当回事了，现在弄得孩子都绝望的活不下去了，何必呢？”</p><p> 铁柱的父亲忍无可忍，猛的回头，怒目而视，喝道：“王天山，你给我住口，当年爹临终前明明把家产留给我一份，你费尽苦心联系亲戚抢走我那份，今天还在这里冷嘲热讽，你真当我王天水没血性么！</p><p> 还有你们这些亲戚，刚才阿谀奉承，现在冷嘲热讽，我家娃都这样了，你们还在那里落井下石，难道就没有一点人性么！”</p><p> 王天山语气一滞，怒声道：“以前的事提那么多干什么，你家娃娃本就不是那块料，我好心劝你，你非但不感谢，反而冲我发火，哼，上梁不正下梁歪，爹这怂样，儿子也好不到哪去！”</p><p> 周围传来的不屑嘲笑以及讥讽，落在呆呆站在原地的王林耳中，恍如一根根利刺狠狠的扎在心脏一般，他强忍内心撕裂的剧痛，冷眼看这一切，记住了每一个亲戚的嘴脸。</p><p> “你！！我和你拼了！”铁柱他爹抄起一旁板凳，就要冲上去，铁柱四叔连忙冲出，拦住后低声道：“二哥，你别冲动，老大家中仆人很多，别吃亏了，有我呢，你看我的。”</p><p> 说完，他瞪着王天山，说道：“大哥，有你这么说话的么，我老四听不下去了，你要是再敢在我面前辱我二哥，别怪我不讲兄弟情分，王家虽大，但老四我这几年结识的江湖朋友也不少，可别被一把火烧个干净！”</p><p> 王天山诺诺了几句，内心对这个交友广泛的四弟很是忌惮。</p><p> “老四，你这话就不对了，老二家的娃娃，本就不是那块料，我们说说难道还错了？这娃不行，还不允许我们长辈说说，这可太没道理了。”辈分最老的三祖叔，不满的说道。</p>', '是');
 INSERT INTO `novel_chapter` VALUES (97, '2025-03-19 11:19:26', 7, 7, '章节标题7', '章节内容7', '是');
 INSERT INTO `novel_chapter` VALUES (98, '2025-03-19 11:19:26', 8, 8, '章节标题8', '章节内容8', '是');
-INSERT INTO `novel_chapter` VALUES (1681903893098, '2025-03-19 11:31:32', 41, 7, '2112121212', '<p>12212212212</p>', '是');
+INSERT INTO `novel_chapter` VALUES (1681903893098, '2025-03-19 11:31:32', 41, 7, '测试', '<p>12212212212</p>\n大武当', '是');
 
 -- ----------------------------
 -- Table structure for novel_comment
@@ -192,12 +192,17 @@ CREATE TABLE `novel_comment`  (
   `CONTENT` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '评论内容',
   `REPLY` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '回复内容',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1681903994248 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '小说信息评论表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1681903994253 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '书籍信息评论表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of novel_comment
 -- ----------------------------
-INSERT INTO `novel_comment` VALUES (1681903994247, '2025-03-19 11:33:14', 41, 1681903700270, 'upload/1681903688933.jpg', '2', '好友意思啊。。。', '感谢支持。。。');
+INSERT INTO `novel_comment` VALUES (1681903994247, '2025-12-04 11:19:26', 41, 1681903700270, 'upload/1681903688933.jpg', '2', '好友意思啊。。。', '感谢支持。。。');
+INSERT INTO `novel_comment` VALUES (1681903994248, '2025-12-23 17:14:07', 41, 18, 'upload/yonghu_touxiang8.jpg', 'li', '厉害', NULL);
+INSERT INTO `novel_comment` VALUES (1681903994249, '2025-12-23 17:14:22', 41, 18, 'upload/yonghu_touxiang8.jpg', 'li', '1111', NULL);
+INSERT INTO `novel_comment` VALUES (1681903994250, '2025-12-23 17:14:25', 41, 18, 'upload/yonghu_touxiang8.jpg', 'li', '测试', NULL);
+INSERT INTO `novel_comment` VALUES (1681903994251, '2025-12-23 17:14:47', 41, 18, 'upload/yonghu_touxiang8.jpg', 'li', 'ces\n', NULL);
+INSERT INTO `novel_comment` VALUES (1681903994252, '2025-12-23 17:14:56', 41, 18, 'upload/yonghu_touxiang8.jpg', 'li', '很棒', '测试1');
 
 -- ----------------------------
 -- Table structure for novel_info
@@ -206,28 +211,28 @@ DROP TABLE IF EXISTS `novel_info`;
 CREATE TABLE `novel_info`  (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
   `ADD_TIME` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `NOVEL_NAME` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '小说名称',
-  `CATEGORY_NAME` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '小说类型',
+  `NOVEL_NAME` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍名称',
+  `CATEGORY_NAME` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '书籍类型',
   `PICTURE` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '图片',
-  `DESCRIPTION` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '小说简介',
+  `DESCRIPTION` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '书籍简介',
   `ACCOUNT` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '账号',
   `AUTHOR_NAME` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '作者姓名',
   `PUBLISH_TIME` datetime NULL DEFAULT NULL COMMENT '发布时间',
   `CLICK_TIME` datetime NULL DEFAULT NULL COMMENT '最近点击时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 49 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '小说信息' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 49 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '书籍信息' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of novel_info
 -- ----------------------------
-INSERT INTO `novel_info` VALUES (41, '2025-03-19 11:19:26', '鬼吹灯', '热血', 'upload/xiaoshuoxinxi_tupian1.jpg,upload/xiaoshuoxinxi_tupian3.jpg', '小说简介1测试', '1', '作者姓名1', '2025-03-19 19:19:26', '2025-02-24 13:26:13');
-INSERT INTO `novel_info` VALUES (42, '2025-03-19 11:19:26', '小说名称2', '小说类型2', 'upload/xiaoshuoxinxi_tupian2.jpg,upload/xiaoshuoxinxi_tupian3.jpg,upload/xiaoshuoxinxi_tupian4.jpg', '小说简介2', '账号2', '作者姓名2', '2025-03-19 19:19:26', '2025-03-19 19:19:26');
-INSERT INTO `novel_info` VALUES (43, '2025-03-19 11:19:26', '小说名称3', '小说类型3', 'upload/xiaoshuoxinxi_tupian3.jpg,upload/xiaoshuoxinxi_tupian4.jpg,upload/xiaoshuoxinxi_tupian5.jpg', '小说简介3', '账号3', '作者姓名3', '2025-03-19 19:19:26', '2025-03-19 19:19:26');
-INSERT INTO `novel_info` VALUES (44, '2025-03-19 11:19:26', '小说名称4', '小说类型4', 'upload/xiaoshuoxinxi_tupian4.jpg,upload/xiaoshuoxinxi_tupian5.jpg,upload/xiaoshuoxinxi_tupian6.jpg', '小说简介4', '账号4', '作者姓名4', '2025-03-19 19:19:26', '2025-03-19 19:19:26');
-INSERT INTO `novel_info` VALUES (45, '2025-03-19 11:19:26', '小说名称5', '小说类型5', 'upload/xiaoshuoxinxi_tupian5.jpg,upload/xiaoshuoxinxi_tupian6.jpg,upload/xiaoshuoxinxi_tupian7.jpg', '小说简介5', '账号5', '作者姓名5', '2025-03-19 19:19:26', '2025-03-19 19:19:26');
-INSERT INTO `novel_info` VALUES (46, '2025-03-19 11:19:26', '小说名称6', '小说类型6', 'upload/xiaoshuoxinxi_tupian6.jpg,upload/xiaoshuoxinxi_tupian7.jpg,upload/xiaoshuoxinxi_tupian8.jpg', '小说简介6', '账号6', '作者姓名6', '2025-03-19 19:19:26', '2025-03-19 19:31:56');
-INSERT INTO `novel_info` VALUES (47, '2025-03-19 11:19:26', '小说名称7', '小说类型7', 'upload/xiaoshuoxinxi_tupian7.jpg,upload/xiaoshuoxinxi_tupian8.jpg,upload/xiaoshuoxinxi_tupian9.jpg', '小说简介7', '账号7', '作者姓名7', '2025-03-19 19:19:26', '2025-03-19 19:31:50');
-INSERT INTO `novel_info` VALUES (48, '2025-03-19 11:19:26', '小说名称8', '小说类型8', 'upload/xiaoshuoxinxi_tupian8.jpg,upload/xiaoshuoxinxi_tupian9.jpg,upload/xiaoshuoxinxi_tupian10.jpg', '小说简介8', '账号8', '作者姓名8', '2025-03-19 19:19:26', '2025-03-19 19:19:26');
+INSERT INTO `novel_info` VALUES (41, '2025-03-19 11:19:26', '鬼吹灯', '热血', 'upload/xiaoshuoxinxi_tupian1.jpg,upload/xiaoshuoxinxi_tupian3.jpg', '书籍简介1测试', '111', '王慧', '2025-03-19 19:19:26', '2025-02-24 13:26:13');
+INSERT INTO `novel_info` VALUES (42, '2025-03-19 11:19:26', '海底两万里', '幻想', 'upload/xiaoshuoxinxi_tupian2.jpg,upload/xiaoshuoxinxi_tupian3.jpg,upload/xiaoshuoxinxi_tupian4.jpg', '书籍简介2', '账号2', '作者姓名2', '2025-03-19 19:19:26', '2025-03-19 19:19:26');
+INSERT INTO `novel_info` VALUES (43, '2025-03-19 11:19:26', '80天环游世界', '幻想', 'upload/xiaoshuoxinxi_tupian3.jpg,upload/xiaoshuoxinxi_tupian4.jpg,upload/xiaoshuoxinxi_tupian5.jpg', '书籍简介3', '账号3', '作者姓名3', '2025-03-19 19:19:26', '2025-03-19 19:19:26');
+INSERT INTO `novel_info` VALUES (44, '2025-03-19 11:19:26', '三体', '科幻', 'upload/xiaoshuoxinxi_tupian4.jpg,upload/xiaoshuoxinxi_tupian5.jpg,upload/xiaoshuoxinxi_tupian6.jpg', '书籍简介4', '账号4', '作者姓名4', '2025-03-19 19:19:26', '2025-03-19 19:19:26');
+INSERT INTO `novel_info` VALUES (45, '2025-03-19 11:19:26', '书籍名称5', '书籍类型5', 'upload/xiaoshuoxinxi_tupian5.jpg,upload/xiaoshuoxinxi_tupian6.jpg,upload/xiaoshuoxinxi_tupian7.jpg', '书籍简介5', '账号5', '作者姓名5', '2025-03-19 19:19:26', '2025-03-19 19:19:26');
+INSERT INTO `novel_info` VALUES (46, '2025-03-19 11:19:26', '书籍名称6', '书籍类型6', 'upload/xiaoshuoxinxi_tupian6.jpg,upload/xiaoshuoxinxi_tupian7.jpg,upload/xiaoshuoxinxi_tupian8.jpg', '书籍简介6', '账号6', '作者姓名6', '2025-03-19 19:19:26', '2025-03-19 19:31:56');
+INSERT INTO `novel_info` VALUES (47, '2025-03-19 11:19:26', '书籍名称7', '书籍类型7', 'upload/xiaoshuoxinxi_tupian7.jpg,upload/xiaoshuoxinxi_tupian8.jpg,upload/xiaoshuoxinxi_tupian9.jpg', '书籍简介7', '账号7', '作者姓名7', '2025-03-19 19:19:26', '2025-03-19 19:31:50');
+INSERT INTO `novel_info` VALUES (48, '2025-03-19 11:19:26', '书籍名称8', '书籍类型8', 'upload/xiaoshuoxinxi_tupian8.jpg,upload/xiaoshuoxinxi_tupian9.jpg,upload/xiaoshuoxinxi_tupian10.jpg', '书籍简介8', '账号8', '作者姓名8', '2025-03-19 19:19:26', '2025-03-19 19:19:26');
 
 -- ----------------------------
 -- Table structure for reader
@@ -252,14 +257,14 @@ CREATE TABLE `reader`  (
 -- ----------------------------
 -- Records of reader
 -- ----------------------------
-INSERT INTO `reader` VALUES (11, '2025-03-19 11:19:26', '用户名1', '123456', '昵称1', '姓名1', '男', 'upload/yonghu_touxiang1.jpg', '773890001@qq.com', '13823888881', '否');
-INSERT INTO `reader` VALUES (12, '2025-03-19 11:19:26', '用户名2', '123456', '昵称2', '姓名2', '男', 'upload/yonghu_touxiang2.jpg', '773890002@qq.com', '13823888882', '否');
-INSERT INTO `reader` VALUES (13, '2025-03-19 11:19:26', '用户名3', '123456', '昵称3', '姓名3', '男', 'upload/yonghu_touxiang3.jpg', '773890003@qq.com', '13823888883', '否');
-INSERT INTO `reader` VALUES (14, '2025-03-19 11:19:26', '用户名4', '123456', '昵称4', '姓名4', '男', 'upload/yonghu_touxiang4.jpg', '773890004@qq.com', '13823888884', '否');
-INSERT INTO `reader` VALUES (15, '2025-03-19 11:19:26', '用户名5', '123456', '昵称5', '姓名5', '男', 'upload/yonghu_touxiang5.jpg', '773890005@qq.com', '13823888885', '否');
-INSERT INTO `reader` VALUES (16, '2025-03-19 11:19:26', '用户名6', '123456', '昵称6', '姓名6', '男', 'upload/yonghu_touxiang6.jpg', '773890006@qq.com', '13823888886', '否');
-INSERT INTO `reader` VALUES (18, '2025-03-19 11:19:26', '1', '1', '昵称8', '姓名8', '男', 'upload/yonghu_touxiang8.jpg', '773890008@qq.com', '13823888888', '否');
-INSERT INTO `reader` VALUES (1681903700270, '2025-03-19 11:28:20', '2', '1', '小白', '王丽', '女', 'upload/1681903688933.jpg', '12121@12.com', '15214121411', '是');
+INSERT INTO `reader` VALUES (11, '2025-03-19 11:19:26', '用户名1', '123456', '昵称1', '姓名1', '男', 'upload/yonghu_touxiang1.jpg', 'hiikok@foxmail.com', '18577537750', '否');
+INSERT INTO `reader` VALUES (12, '2025-03-19 11:19:26', '用户名2', '123456', '昵称2', '姓名2', '男', 'upload/yonghu_touxiang2.jpg', 'hiikok@foxmail.com', '18577537751', '否');
+INSERT INTO `reader` VALUES (13, '2025-03-19 11:19:26', '用户名3', '123456', '昵称3', '姓名3', '男', 'upload/yonghu_touxiang3.jpg', 'hiikok@foxmail.com', '18577537752', '否');
+INSERT INTO `reader` VALUES (14, '2025-03-19 11:19:26', '用户名4', '123456', '昵称4', '姓名4', '男', 'upload/yonghu_touxiang4.jpg', 'hiikok@foxmail.com', '18577537753', '否');
+INSERT INTO `reader` VALUES (15, '2025-03-19 11:19:26', '用户名5', '123456', '昵称5', '姓名5', '男', 'upload/yonghu_touxiang5.jpg', 'hiikok@foxmail.com', '18577537754', '否');
+INSERT INTO `reader` VALUES (16, '2025-03-19 11:19:26', '用户名6', '123456', '昵称6', '姓名6', '男', 'upload/yonghu_touxiang6.jpg', 'hiikok@foxmail.com', '18577537755', '否');
+INSERT INTO `reader` VALUES (18, '2025-03-19 11:19:26', '1', '1', '昵称8', 'li', '男', 'upload/yonghu_touxiang8.jpg', 'hiikok@foxmail.com', '18577537750', '是');
+INSERT INTO `reader` VALUES (1681903700270, '2025-03-19 11:28:20', '2', '1', '小白', '王丽', '女', 'upload/1681903688933.jpg', '12121@12.com', '18577537757', '是');
 
 -- ----------------------------
 -- Table structure for system_config
@@ -300,8 +305,8 @@ CREATE TABLE `user_collection`  (
 -- ----------------------------
 -- Records of user_collection
 -- ----------------------------
-INSERT INTO `user_collection` VALUES (1681903912008, '2025-03-19 11:31:51', 1681903700270, 47, 'xiaoshuoxinxi', '小说名称7', 'upload/xiaoshuoxinxi_tupian7.jpg', '1', '小说类型7', NULL);
-INSERT INTO `user_collection` VALUES (1681903917798, '2025-03-19 11:31:56', 1681903700270, 46, 'xiaoshuoxinxi', '小说名称6', 'upload/xiaoshuoxinxi_tupian6.jpg', '1', '小说类型6', NULL);
+INSERT INTO `user_collection` VALUES (1681903912008, '2025-03-19 11:31:51', 1681903700270, 47, 'xiaoshuoxinxi', '书籍名称7', 'upload/xiaoshuoxinxi_tupian7.jpg', '1', '书籍类型7', NULL);
+INSERT INTO `user_collection` VALUES (1681903917798, '2025-03-19 11:31:56', 1681903700270, 46, 'xiaoshuoxinxi', '书籍名称6', 'upload/xiaoshuoxinxi_tupian6.jpg', '1', '书籍类型6', NULL);
 INSERT INTO `user_collection` VALUES (1681903941674, '2025-03-19 11:32:20', 1681903700270, 41, 'xiaoshuoxinxi', '鬼吹灯', 'upload/xiaoshuoxinxi_tupian1.jpg', '1', '热血', NULL);
 
 -- ----------------------------

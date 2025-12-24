@@ -41,7 +41,7 @@ const config: Config = {
   // 开发环境使用代理，生产环境使用实际地址
   baseUrl: import.meta.env.VITE_APP_BASE_URL || '',
 
-  projectName: '小说网站系统',
+  projectName: '文趣阁',
 
   uploadUrl: '/file/upload',
 
@@ -54,6 +54,8 @@ const config: Config = {
     { value: 'zuozhe', label: '作者' },
   ],
 }
+
+export const baseUrl = config.baseUrl
 
 export default config
 

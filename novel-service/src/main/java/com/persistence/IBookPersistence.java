@@ -5,7 +5,7 @@ import com.domain.Book;
 import java.util.List;
 
 /**
- * 小说持久化接口
+ * 书籍持久化接口
  * 
  * @author Novel Platform Team
  * @date 2024-12-11
@@ -13,12 +13,12 @@ import java.util.List;
 public interface IBookPersistence {
 
     /**
-     * 保存小说
+     * 保存书籍
      */
     void save(Book book);
 
     /**
-     * 更新小说
+     * 更新书籍
      */
     void update(Book book);
 

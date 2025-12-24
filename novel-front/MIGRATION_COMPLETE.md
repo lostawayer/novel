@@ -86,13 +86,13 @@ src/
 - ✅ `login/login.vue` - 登录页（多角色登录）
 - ✅ `register/register.vue` - 注册页（用户/作者注册）
 - ✅ `index.vue` - 主布局（导航、轮播图、底部）
-- ✅ `home/home.vue` - 首页（推荐、最新、热门小说）
+- ✅ `home/home.vue` - 首页（推荐、最新、热门书籍）
 - ✅ `center/center.vue` - 个人中心（信息修改、密码修改）
 - ✅ `messages/list.vue` - 留言板
-- ✅ `xiaoshuoxinxi/list.vue` - 小说列表（搜索、分页）
+- ✅ `xiaoshuoxinxi/list.vue` - 书籍列表（搜索、分页）
 
 **占位页面（待完善）**:
-- ✅ 小说管理: detail.vue, add.vue, chapter.vue
+- ✅ 书籍管理: detail.vue, add.vue, chapter.vue
 - ✅ 用户管理: list.vue, detail.vue, add.vue
 - ✅ 作者管理: list.vue, detail.vue, add.vue
 - ✅ 分类管理: list.vue, detail.vue, add.vue
@@ -143,13 +143,13 @@ front/src/assets/js/ → novel-front/src/assets/js/
 **`.env.development`**:
 ```env
 VITE_APP_BASE_URL=http://localhost:8088
-VITE_APP_TITLE=小说网站系统
+VITE_APP_TITLE=“文趣阁”阅读平台
 ```
 
 **`.env.production`**:
 ```env
 VITE_APP_BASE_URL=http://your-production-url
-VITE_APP_TITLE=小说网站系统
+VITE_APP_TITLE=“文趣阁”阅读平台
 ```
 
 ### 3. 安装依赖并启动 ⚠️
@@ -166,14 +166,14 @@ npm run dev
 以下页面已创建占位文件，需根据业务逻辑继续开发：
 
 ### 高优先级
-1. **小说详情页** (`xiaoshuoxinxi/detail.vue`)
-   - 小说信息展示
+1. **书籍详情页** (`xiaoshuoxinxi/detail.vue`)
+   - 书籍信息展示
    - 章节列表
    - 收藏/购买功能
    - 评论功能
 
-2. **小说管理** (`xiaoshuoxinxi/add.vue`)
-   - 添加/编辑小说
+2. **书籍管理** (`xiaoshuoxinxi/add.vue`)
+   - 添加/编辑书籍
    - 封面上传
    - 富文本描述
 

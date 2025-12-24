@@ -44,8 +44,8 @@ export const useUserStore = defineStore('user', () => {
   // 是否登录
   const isLoggedIn = computed(() => !!userInfo.value)
 
-  // 用户名
-  const username = computed(() => userInfo.value?.yonghuming || '')
+  // 用户名（显示用的姓名）
+  const username = computed(() => userInfo.value?.xingming || userInfo.value?.yonghuming || '')
 
   // 设置用户信息
   const setUserInfo = (info: User) => {

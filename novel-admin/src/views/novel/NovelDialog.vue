@@ -25,8 +25,8 @@ const emit = defineEmits<{
 }>()
 
 const rules = {
-  bookName: [{ required: true, message: '请输入小说名称', trigger: 'blur' }],
-  categoryName: [{ required: true, message: '请输入小说类型', trigger: 'blur' }]
+  bookName: [{ required: true, message: '请输入书籍名称', trigger: 'blur' }],
+  categoryName: [{ required: true, message: '请输入书籍类型', trigger: 'blur' }]
 }
 
 function beforeClose(done: () => void) {
@@ -88,18 +88,18 @@ defineExpose({
 <template>
   <el-dialog
     v-model="visible"
-    :title="isUpdate ? '编辑小说' : '新增小说'"
+    :title="isUpdate ? '编辑书籍' : '新增书籍'"
     width="600px"
     :before-close="beforeClose"
     draggable
     destroy-on-close
   >
     <el-form ref="formRef" v-loading="submitting" :model="model" :rules="rules" label-width="80px">
-      <el-form-item label="小说名称" prop="bookName">
-        <el-input v-model="model.bookName" placeholder="请输入小说名称" />
+      <el-form-item label="书籍名称" prop="bookName">
+        <el-input v-model="model.bookName" placeholder="请输入书籍名称" />
       </el-form-item>
-      <el-form-item label="小说类型" prop="categoryName">
-        <el-input v-model="model.categoryName" placeholder="请输入小说类型，如：玄幻、都市" />
+      <el-form-item label="书籍类型" prop="categoryName">
+        <el-input v-model="model.categoryName" placeholder="请输入书籍类型，如：玄幻、都市" />
       </el-form-item>
       <el-form-item label="封面图片" prop="coverImage">
         <el-input v-model="model.coverImage" placeholder="请输入封面图片URL" />
@@ -110,12 +110,12 @@ defineExpose({
       <el-form-item label="作者姓名">
         <el-input :model-value="model.authorName" disabled />
       </el-form-item>
-      <el-form-item label="小说简介" prop="introduction">
+      <el-form-item label="书籍简介" prop="introduction">
         <el-input
           v-model="model.introduction"
           type="textarea"
           :rows="4"
-          placeholder="请输入小说简介"
+          placeholder="请输入书籍简介"
         />
       </el-form-item>
     </el-form>

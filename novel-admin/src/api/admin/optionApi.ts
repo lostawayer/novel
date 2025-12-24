@@ -12,7 +12,7 @@ export interface CompatResponse<T> {
   data: T
 }
 
-// 获取小说类型选项
+// 获取书籍类型选项
 export function getCategoryOptions() {
   return request.get<CompatResponse<Option[]>>('/option/category')
 }

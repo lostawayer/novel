@@ -1,9 +1,9 @@
 <template>
   <div class="home-container">
-    <!-- 推荐小说 -->
+    <!-- 推荐书籍 -->
     <div class="recommend-section">
       <div class="section-title">
-        <span>小说推荐</span>
+        <span>书籍推荐</span>
       </div>
 
       <div class="recommend-list" v-loading="loading">
@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <!-- 最新小说 -->
+    <!-- 最新书籍 -->
     <div class="latest-section">
       <div class="section-title">
         <span>最新发布</span>
@@ -54,7 +54,7 @@
       </div>
     </div>
 
-    <!-- 热门小说 -->
+    <!-- 热门书籍 -->
     <div class="hot-section">
       <div class="section-title">
         <span>热门排行</span>
@@ -100,7 +100,7 @@ const recommendList = ref<Novel[]>([])
 const latestList = ref<Novel[]>([])
 const hotList = ref<Novel[]>([])
 
-// 获取推荐小说
+// 获取推荐书籍
 const getRecommendList = async () => {
   try {
     loading.value = true
@@ -114,13 +114,13 @@ const getRecommendList = async () => {
       recommendList.value = res.data.list || []
     }
   } catch (error) {
-    console.error('获取推荐小说失败:', error)
+    console.error('获取推荐书籍失败:', error)
   } finally {
     loading.value = false
   }
 }
 
-// 获取最新小说
+// 获取最新书籍
 const getLatestList = async () => {
   try {
     const res = await get('/xiaoshuoxinxi/list', {
@@ -133,11 +133,11 @@ const getLatestList = async () => {
       latestList.value = res.data.list || []
     }
   } catch (error) {
-    console.error('获取最新小说失败:', error)
+    console.error('获取最新书籍失败:', error)
   }
 }
 
-// 获取热门小说
+// 获取热门书籍
 const getHotList = async () => {
   try {
     const res = await get('/xiaoshuoxinxi/list', {
@@ -150,7 +150,7 @@ const getHotList = async () => {
       hotList.value = res.data.list || []
     }
   } catch (error) {
-    console.error('获取热门小说失败:', error)
+    console.error('获取热门书籍失败:', error)
   }
 }
 
@@ -191,7 +191,7 @@ onMounted(() => {
   }
 }
 
-// 推荐小说
+// 推荐书籍
 .recommend-list {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -238,7 +238,7 @@ onMounted(() => {
   }
 }
 
-// 最新小说
+// 最新书籍
 .latest-list {
   display: grid;
   grid-template-columns: repeat(6, 1fr);

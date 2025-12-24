@@ -31,7 +31,7 @@ const routes: RouteRecordRaw[] = [
         path: 'novelList',
         name: 'novelList',
         component: () => import('@/views/novel/NovelListView.vue'),
-        meta: { title: '我的小说' }
+        meta: { title: '我的书籍' }
       },
       {
         path: 'chapterList',
@@ -52,18 +52,18 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/admin/AuthorListView.vue'),
         meta: { title: '作者管理', requireAdmin: true }
       },
-      // 管理员功能 - 小说管理
+      // 管理员功能 - 书籍管理
       {
         path: 'categoryList',
         name: 'categoryList',
         component: () => import('@/views/admin/CategoryListView.vue'),
-        meta: { title: '小说类型', requireAdmin: true }
+        meta: { title: '书籍类型', requireAdmin: true }
       },
       {
         path: 'bookList',
         name: 'bookList',
         component: () => import('@/views/admin/BookListView.vue'),
-        meta: { title: '小说信息', requireAdmin: true }
+        meta: { title: '书籍信息', requireAdmin: true }
       },
       {
         path: 'chapterManage',
@@ -128,7 +128,7 @@ const router = createRouter({
 // 路由守卫
 router.beforeEach((to) => {
   // 设置页面标题
-  document.title = `${to.meta.title || '小说管理系统'} - 小说网站后台`
+  document.title = `${to.meta.title || '“文趣阁”后台系统'} - 书籍网站后台`
 
   // 登录和注册页面不需要验证
   if (to.name === 'login' || to.name === 'register') {

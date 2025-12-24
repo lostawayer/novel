@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <h2>小说类型</h2>
-    <p>小说类型列表功能开发中...</p>
+    <h2>书籍类型</h2>
+    <p>书籍类型列表功能开发中...</p>
   </div>
 </template>
 

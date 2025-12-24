@@ -95,6 +95,8 @@ const handleBeforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
 const handleSuccess: UploadProps['onSuccess'] = (response, uploadFile, uploadFiles) => {
   if (response && response.code === 0) {
     const url = 'upload/' + response.file
+    // 设置上传文件的url，供setFileList使用
+    uploadFile.url = url
     // 更新文件列表
     setFileList(uploadFiles)
     emit('change', fileUrlList.value.join(','))
@@ -132,15 +134,34 @@ const setFileList = (uploadFiles: UploadFiles) => {
   const token = getToken()
 
   uploadFiles.forEach((item, index) => {
-    let url = item.url?.split('?')[0] || ''
-    if (!url.startsWith('http')) {
-      url = config.baseUrl + '/' + url
+    let url = item.url || ''
+    // 去掉查询参数
+    url = url.split('?')[0]
+    // 如果是blob地址，跳过（上传中的临时文件）
+    if (url.startsWith('blob:')) {
+      return
     }
+    
+    // 提取相对路径用于保存到数据库
+    let relativePath = url
+    if (url.startsWith('http')) {
+      // 从完整URL中提取 upload/xxx.jpg 部分
+      const match = url.match(/upload\/[^?]+/)
+      relativePath = match ? match[0] : url
+    }
+    
+    // 构建完整URL用于显示
+    let displayUrl = url
+    if (url && !url.startsWith('http')) {
+      displayUrl = config.baseUrl + '/' + url
+    }
+    
     fileArray.push({
       name: item.name,
-      url: url + '?token=' + token,
+      url: displayUrl + '?token=' + token,
     })
-    fileUrlArray.push(url)
+    // 存储相对路径用于保存到数据库
+    fileUrlArray.push(relativePath)
   })
 
   fileList.value = fileArray

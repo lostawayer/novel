@@ -31,12 +31,21 @@ public class AuthorManager implements IAuthorManager {
     @Transactional
     public void addOrUpdateAuthor(Author author) {
         if (author.getId() == null) {
-            // 新增
+            // 新增 - 设置默认审核状态为待审核
             author.setCreateTime(new Date());
+            if (author.getAuditStatus() == null || author.getAuditStatus().isEmpty()) {
+                author.setAuditStatus("待审核");
+            }
             authorMapper.insert(author);
             log.info("添加作者成功：" + author.getAccount());
         } else {
-            // 更新
+            // 更新 - 如果密码为空，先获取原密码
+            if (author.getPassword() == null || author.getPassword().isEmpty()) {
+                Author existingAuthor = authorMapper.selectById(author.getId());
+                if (existingAuthor != null) {
+                    author.setPassword(existingAuthor.getPassword());
+                }
+            }
             authorMapper.updateById(author);
             log.info("更新作者成功：" + author.getAccount());
         }
@@ -76,6 +85,18 @@ public class AuthorManager implements IAuthorManager {
 
     @Override
     public Author login(String account, String password) {
-        return authorMapper.selectByAccountAndPassword(account, password);
+        Author author = authorMapper.selectByAccount(account);
+        if (author == null) {
+            return null;
+        }
+        if (!password.equals(author.getPassword())) {
+            return null;
+        }
+        return author;
+    }
+    
+    @Override
+    public Author getAuthorForLogin(String account) {
+        return authorMapper.selectByAccount(account);
     }
 }

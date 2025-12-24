@@ -43,9 +43,9 @@ service.interceptors.response.use(
       return response as any
     }
 
-    // 请求成功
+    // 请求成功 - 直接返回数据
     if (res.code === 0 || res.code === 200) {
-      return res
+      return res as any
     }
 
     // 未登录或 token 过期
@@ -58,9 +58,8 @@ service.interceptors.response.use(
       return Promise.reject(new Error(res.msg || '登录已过期'))
     }
 
-    // 其他错误
-    ElMessage.error(res.msg || '请求失败')
-    return Promise.reject(new Error(res.msg || '请求失败'))
+    // 其他错误 - 返回原始响应让调用方处理
+    return res as any
   },
   (error) => {
     console.error('响应错误:', error)

@@ -30,7 +30,9 @@ const activeMenu = computed(() => route.path)
 // 作者菜单
 const authorMenuItems = [
   { index: '/main/welcome', icon: Histogram, title: '工作台' },
-  { index: '/main/novelList', icon: Reading, title: '我的小说' }
+  { index: '/main/novelList', icon: Reading, title: '我的书籍' },
+  { index: '/main/profile', icon: User, title: '个人中心' },
+  { index: '/main/password', icon: Lock, title: '修改密码' }
 ]
 
 // 管理员菜单 - 分组 (完整功能)
@@ -47,13 +49,13 @@ const adminMenuGroups = [
     ]
   },
   {
-    title: '小说类型管理',
-    items: [{ index: '/main/categoryList', icon: Collection, title: '小说类型' }]
+    title: '书籍类型管理',
+    items: [{ index: '/main/categoryList', icon: Collection, title: '书籍类型' }]
   },
   {
-    title: '小说信息管理',
+    title: '书籍信息管理',
     items: [
-      { index: '/main/bookList', icon: Reading, title: '小说信息' },
+      { index: '/main/bookList', icon: Reading, title: '书籍信息' },
       { index: '/main/commentList', icon: Comment, title: '评论管理' }
     ]
   },
@@ -110,10 +112,10 @@ const toggleCollapse = () => {
       <div class="logo-container">
         <transition name="logo">
           <div v-if="!isCollapse" class="logo-content">
-            <span class="logo-text">小说管理系统</span>
+            <span class="logo-text">“文趣阁”后台系统</span>
           </div>
           <div v-else class="logo-mini">
-            <span class="logo-text-mini">小说</span>
+            <span class="logo-text-mini">书籍</span>
           </div>
         </transition>
       </div>

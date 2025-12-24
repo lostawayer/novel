@@ -91,12 +91,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/zuozhe/add.vue'),
         meta: { title: '添加作者', requireAuth: true },
       },
-      // 小说分类
+      // 书籍分类
       {
         path: 'xiaoshuoleixing',
         name: 'XiaoshuoleixingList',
         component: () => import('@/pages/xiaoshuoleixing/list.vue'),
-        meta: { title: '小说分类' },
+        meta: { title: '书籍分类' },
       },
       {
         path: 'xiaoshuoleixingDetail',
@@ -110,44 +110,41 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/xiaoshuoleixing/add.vue'),
         meta: { title: '添加分类', requireAuth: true },
       },
-      // 小说信息
+      // 书籍信息
       {
         path: 'xiaoshuoxinxi',
         name: 'XiaoshuoxinxiList',
         component: () => import('@/pages/xiaoshuoxinxi/list.vue'),
-        meta: { title: '小说列表' },
+        meta: { title: '书籍列表' },
       },
       {
         path: 'xiaoshuoxinxiDetail',
         name: 'XiaoshuoxinxiDetail',
         component: () => import('@/pages/xiaoshuoxinxi/detail.vue'),
-        meta: { title: '小说详情' },
+        meta: { title: '书籍详情' },
       },
       {
         path: 'xiaoshuoxinxiAdd',
         name: 'XiaoshuoxinxiAdd',
         component: () => import('@/pages/xiaoshuoxinxi/add.vue'),
-        meta: { title: '添加小说', requireAuth: true },
+        meta: { title: '添加书籍', requireAuth: true },
       },
       {
         path: 'xiaoshuoxinxiChapter',
         name: 'XiaoshuoxinxiChapter',
         component: () => import('@/pages/xiaoshuoxinxi/chapter.vue'),
-        meta: { title: '小说章节' },
+        meta: { title: '书籍章节' },
       },
     ],
   },
+  // 兼容旧路由，重定向到首页
   {
     path: '/login',
-    name: 'Login',
-    component: () => import('@/pages/login/login.vue'),
-    meta: { title: '登录' },
+    redirect: '/index/home',
   },
   {
     path: '/register',
-    name: 'Register',
-    component: () => import('@/pages/register/register.vue'),
-    meta: { title: '注册' },
+    redirect: '/index/home',
   },
 ]
 
@@ -161,15 +158,15 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   // 设置页面标题
   if (to.meta.title) {
-    document.title = `${to.meta.title} - 小说网站系统`
+    document.title = `${to.meta.title} - 文趣阁`
   }
 
-  // 判断是否需要登录
+  // 判断是否需要登录 - 未登录时重定向到首页（会自动弹出登录框）
   if (to.meta.requireAuth) {
     const token = getToken()
     if (!token) {
       ElMessage.warning('请先登录')
-      next({ path: '/login', query: { redirect: to.fullPath } })
+      next({ path: '/index/home', query: { needLogin: '1' } })
       return
     }
   }

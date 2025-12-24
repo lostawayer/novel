@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -20,6 +21,15 @@ public class MvConfig implements WebMvcConfigurer {
         corsRegistration.allowedMethods(CorsConfiguration.ALL);//指定允许的 HTTP 请求方法
         corsRegistration.allowedHeaders(CorsConfiguration.ALL);//指定前端请求中允许携带的请求头
         corsRegistration.allowedOriginPatterns(CorsConfiguration.ALL);//指定允许跨域访问的来源
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 映射 /upload/** 到静态资源目录
+        String projectDir = System.getProperty("user.dir");
+        String uploadPath = "file:" + projectDir + "/novel-service/src/main/resources/static/upload/";
+        registry.addResourceHandler("/upload/**")
+                .addResourceLocations(uploadPath, "classpath:/static/upload/");
     }
 
     @Bean

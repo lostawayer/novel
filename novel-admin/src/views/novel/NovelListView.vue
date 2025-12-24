@@ -32,7 +32,7 @@ async function findNovels() {
     novels.value = await findNovelApi(novels.value.pageNumber, novels.value.pageSize, {
       bookName: searchForm.value.bookName,
       categoryName: searchForm.value.categoryName,
-      authorAccount: userStore.account // 只查询当前作者的小说
+      authorAccount: userStore.account // 只查询当前作者的书籍
     })
   } catch (error: any) {
     ElMessage.error(error.message || '获取数据失败')
@@ -75,7 +75,7 @@ function batchDelete() {
 }
 
 function deleteNovels(ids: number[]) {
-  ElMessageBox.confirm('确认删除选中的小说吗？', '提示', {
+  ElMessageBox.confirm('确认删除选中的书籍吗？', '提示', {
     type: 'warning',
     draggable: true
   })
@@ -100,7 +100,7 @@ onMounted(() => {
   <el-card shadow="never">
     <template #header>
       <div class="card-header">
-        <span class="title">我的小说</span>
+        <span class="title">我的书籍</span>
         <div class="actions">
           <el-button type="primary" :icon="Plus" @click="showDialog()">新增</el-button>
           <el-button
@@ -115,15 +115,15 @@ onMounted(() => {
     </template>
 
     <el-form :inline="true" :model="searchForm" class="search-form">
-      <el-form-item label="小说名称">
+      <el-form-item label="书籍名称">
         <el-input
           v-model="searchForm.bookName"
-          placeholder="请输入小说名称"
+          placeholder="请输入书籍名称"
           clearable
           @keyup.enter="onSearch"
         />
       </el-form-item>
-      <el-form-item label="小说类型">
+      <el-form-item label="书籍类型">
         <el-input
           v-model="searchForm.categoryName"
           placeholder="请输入类型"
@@ -147,21 +147,24 @@ onMounted(() => {
     >
       <el-table-column type="selection" width="50" />
       <el-table-column type="index" label="序号" width="60" />
-      <el-table-column prop="bookName" label="小说名称" width="150" show-overflow-tooltip />
-      <el-table-column prop="categoryName" label="小说类型" width="100" />
+      <el-table-column prop="bookName" label="书籍名称" width="150" show-overflow-tooltip />
+      <el-table-column prop="categoryName" label="书籍类型" width="100" />
       <el-table-column prop="coverImage" label="封面" width="100">
         <template #default="{ row }">
           <el-image
             v-if="row.coverImage"
-            :src="row.coverImage"
+            :src="'/' + (row.coverImage.includes(',') ? row.coverImage.split(',')[0] : row.coverImage)"
             fit="cover"
             style="width: 60px; height: 80px"
-          />
+          >
+            <template #error>
+              <div class="image-error">无图</div>
+            </template>
+          </el-image>
           <span v-else>-</span>
         </template>
       </el-table-column>
       <el-table-column prop="authorName" label="作者姓名" width="100" />
-      <el-table-column prop="clickCount" label="点击量" width="80" />
       <el-table-column prop="publishTime" label="发布时间" width="160" />
       <el-table-column prop="introduction" label="简介" min-width="200" show-overflow-tooltip />
       <el-table-column label="操作" width="200" fixed="right">
@@ -206,5 +209,16 @@ onMounted(() => {
 .el-pagination {
   margin-top: 16px;
   justify-content: flex-end;
+}
+
+.image-error {
+  width: 60px;
+  height: 80px;
+  background: #f5f7fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #909399;
+  font-size: 12px;
 }
 </style>

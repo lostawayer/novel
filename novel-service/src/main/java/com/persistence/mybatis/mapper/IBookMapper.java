@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * 小说Mapper
+ * 书籍Mapper
  * 
  * @author Novel Platform Team
  * @date 2024-12-11

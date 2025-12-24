@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { User, Lock, Hide, View } from '@element-plus/icons-vue'
+import { User, Lock, Hide, View, Reading, Edit } from '@element-plus/icons-vue'
 import { loginUserStore, type LoginUser, type UserRole } from '@/stores/loginUser'
 import { loginApi, adminLoginApi } from '@/api/auth/authApi'
 
@@ -104,7 +104,7 @@ function goRegister() {
       <div class="login-form-container">
         <div class="logo-container">
           <h2 class="welcome-text">欢迎回来</h2>
-          <h3 class="system-title">小说网站管理系统</h3>
+          <h3 class="system-title">书籍网站管理系统</h3>
         </div>
 
         <el-form ref="loginForm" :model="model" :rules="rules" class="login-form">
@@ -159,14 +159,14 @@ function goRegister() {
         </el-form>
 
         <div class="login-footer">
-          <p class="copyright">© 2025 小说网站管理系统</p>
+          <p class="copyright">© 2025 书籍网站管理系统</p>
         </div>
       </div>
 
       <div class="login-image">
         <div class="overlay">
           <h2 class="slogan">阅读 · 创作 · 分享</h2>
-          <p class="description">基于 Vue3 + Element Plus 的现代化小说管理系统</p>
+          <p class="description">基于 Vue3 + Element Plus 的现代化“文趣阁”后台系统</p>
           <div class="features">
             <div class="feature-item">
               <el-icon size="24"><User /></el-icon>
@@ -174,7 +174,7 @@ function goRegister() {
             </div>
             <div class="feature-item">
               <el-icon size="24"><Reading /></el-icon>
-              <span>小说管理</span>
+              <span>书籍管理</span>
             </div>
             <div class="feature-item">
               <el-icon size="24"><Edit /></el-icon>
@@ -186,13 +186,6 @@ function goRegister() {
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { Reading, Edit } from '@element-plus/icons-vue'
-export default {
-  components: { Reading, Edit }
-}
-</script>
 
 <style scoped>
 .login-container {

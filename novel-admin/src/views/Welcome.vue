@@ -1,39 +1,72 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { loginUserStore } from '@/stores/loginUser'
-import { Reading, Edit, ArrowRight, User } from '@element-plus/icons-vue'
+import { Reading, Edit, ArrowRight, User, UserFilled, ChatDotRound, Bell, Collection } from '@element-plus/icons-vue'
 import { getNovelsByAuthorApi, type Novel } from '@/api/novel/novelApi'
+import request from '@/api/request'
 
 const router = useRouter()
 const userStore = loginUserStore()
 const loading = ref(false)
 const novels = ref<Novel[]>([])
 
-// 快捷操作
-const quickActions = [
-  {
-    title: '我的小说',
-    desc: '管理我的作品',
-    icon: Reading,
-    route: '/main/novelList',
-    color: '#409eff'
-  },
-  {
-    title: '个人中心',
-    desc: '修改个人信息',
-    icon: User,
-    route: '/main/profile',
-    color: '#67c23a'
-  }
+// 管理员统计数据
+const adminStats = ref({
+  userCount: 0,
+  authorCount: 0,
+  novelCount: 0,
+  commentCount: 0
+})
+
+// 作者快捷操作
+const authorQuickActions = [
+  { title: '我的书籍', desc: '管理我的作品', icon: Reading, route: '/main/novelList', color: '#409eff' },
+  { title: '个人中心', desc: '修改个人信息', icon: User, route: '/main/profile', color: '#67c23a' }
 ]
 
+// 管理员快捷操作
+const adminQuickActions = [
+  { title: '用户管理', desc: '管理读者用户', icon: UserFilled, route: '/main/userList', color: '#409eff' },
+  { title: '作者管理', desc: '管理作者账号', icon: User, route: '/main/authorList', color: '#67c23a' },
+  { title: '书籍管理', desc: '管理所有书籍', icon: Reading, route: '/main/bookList', color: '#e6a23c' },
+  { title: '评论管理', desc: '管理书籍评论', icon: ChatDotRound, route: '/main/commentList', color: '#f56c6c' },
+  { title: '公告管理', desc: '发布系统公告', icon: Bell, route: '/main/newsList', color: '#909399' },
+  { title: '类型管理', desc: '管理书籍分类', icon: Collection, route: '/main/categoryList', color: '#9c27b0' }
+]
+
+const quickActions = computed(() => userStore.isAdmin ? adminQuickActions : authorQuickActions)
+
 async function loadNovels() {
+  if (userStore.isAdmin) return
   loading.value = true
   try {
     novels.value = await getNovelsByAuthorApi(userStore.account)
   } catch (error) {
-    console.error('获取小说列表失败', error)
+    console.error('获取书籍列表失败', error)
+  } finally {
+    loading.value = false
+  }
+}
+
+async function loadAdminStats() {
+  if (!userStore.isAdmin) return
+  loading.value = true
+  try {
+    const [users, authors, novels, comments] = await Promise.all([
+      request.get('/yonghu/page', { params: { page: 1, limit: 1 } }),
+      request.get('/zuozhe/page', { params: { page: 1, limit: 1 } }),
+      request.get('/xiaoshuoxinxi/page', { params: { page: 1, limit: 1 } }),
+      request.get('/discussxiaoshuoxinxi/page', { params: { page: 1, limit: 1 } })
+    ])
+    adminStats.value = {
+      userCount: users.data?.data?.total || 0,
+      authorCount: authors.data?.data?.total || 0,
+      novelCount: novels.data?.data?.total || 0,
+      commentCount: comments.data?.data?.total || 0
+    }
+  } catch (error) {
+    console.error('获取统计数据失败', error)
   } finally {
     loading.value = false
   }
@@ -44,7 +77,11 @@ function navigateTo(route: string) {
 }
 
 onMounted(() => {
-  loadNovels()
+  if (userStore.isAdmin) {
+    loadAdminStats()
+  } else {
+    loadNovels()
+  }
 })
 </script>
 
@@ -53,23 +90,72 @@ onMounted(() => {
     <!-- 欢迎信息 -->
     <div class="welcome-header">
       <div class="welcome-title">
-        <h2>欢迎使用小说管理系统</h2>
-        <p>{{ userStore.authorName }}，祝您创作愉快！</p>
+        <h2>欢迎使用“文趣阁”后台系统</h2>
+        <p>{{ userStore.authorName }}，{{ userStore.isAdmin ? '系统运行正常！' : '祝您创作愉快！' }}</p>
       </div>
       <div class="header-date">
-        {{
-          new Date().toLocaleDateString('zh-CN', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            weekday: 'long'
-          })
-        }}
+        {{ new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' }) }}
       </div>
     </div>
 
-    <!-- 统计卡片 -->
-    <el-row :gutter="20" class="stats-row">
+    <!-- 管理员统计卡片 -->
+    <el-row v-if="userStore.isAdmin" :gutter="20" class="stats-row">
+      <el-col :xs="12" :sm="6">
+        <el-card class="stat-card" shadow="hover">
+          <div class="stat-content">
+            <div class="stat-icon" style="background: #409eff">
+              <el-icon :size="28"><UserFilled /></el-icon>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value">{{ adminStats.userCount }}</div>
+              <div class="stat-title">用户数</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :xs="12" :sm="6">
+        <el-card class="stat-card" shadow="hover">
+          <div class="stat-content">
+            <div class="stat-icon" style="background: #67c23a">
+              <el-icon :size="28"><User /></el-icon>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value">{{ adminStats.authorCount }}</div>
+              <div class="stat-title">作者数</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :xs="12" :sm="6">
+        <el-card class="stat-card" shadow="hover">
+          <div class="stat-content">
+            <div class="stat-icon" style="background: #e6a23c">
+              <el-icon :size="28"><Reading /></el-icon>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value">{{ adminStats.novelCount }}</div>
+              <div class="stat-title">书籍数</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :xs="12" :sm="6">
+        <el-card class="stat-card" shadow="hover">
+          <div class="stat-content">
+            <div class="stat-icon" style="background: #f56c6c">
+              <el-icon :size="28"><ChatDotRound /></el-icon>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value">{{ adminStats.commentCount }}</div>
+              <div class="stat-title">评论数</div>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <!-- 作者统计卡片 -->
+    <el-row v-else :gutter="20" class="stats-row">
       <el-col :xs="24" :sm="12" :md="8">
         <el-card class="stat-card" shadow="hover">
           <div class="stat-content">
@@ -78,7 +164,7 @@ onMounted(() => {
             </div>
             <div class="stat-info">
               <div class="stat-value">{{ novels.length }}</div>
-              <div class="stat-title">我的小说</div>
+              <div class="stat-title">我的书籍</div>
             </div>
           </div>
         </el-card>
@@ -104,12 +190,7 @@ onMounted(() => {
         <span class="card-title">快捷操作</span>
       </template>
       <div class="quick-actions">
-        <div
-          v-for="action in quickActions"
-          :key="action.route"
-          class="action-item"
-          @click="navigateTo(action.route)"
-        >
+        <div v-for="action in quickActions" :key="action.route" class="action-item" @click="navigateTo(action.route)">
           <div class="action-icon" :style="{ background: action.color }">
             <el-icon :size="22"><component :is="action.icon" /></el-icon>
           </div>
@@ -122,14 +203,12 @@ onMounted(() => {
       </div>
     </el-card>
 
-    <!-- 我的小说列表 -->
-    <el-card shadow="hover" class="novels-card" v-if="novels.length > 0">
+    <!-- 作者的书籍列表 -->
+    <el-card v-if="!userStore.isAdmin && novels.length > 0" shadow="hover" class="novels-card">
       <template #header>
         <div class="card-header">
-          <span class="card-title">我的小说</span>
-          <el-button type="primary" link @click="navigateTo('/main/novelList')">
-            查看全部
-          </el-button>
+          <span class="card-title">我的书籍</span>
+          <el-button type="primary" link @click="navigateTo('/main/novelList')">查看全部</el-button>
         </div>
       </template>
       <div class="novels-list">

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { Search, Refresh, Plus, Delete, Edit } from '@element-plus/icons-vue'
 import {
   getCategoryPage,
@@ -9,46 +9,34 @@ import {
   updateCategory,
   type Category
 } from '@/api/admin/categoryApi'
+import { useTable } from '@/composables'
 
-const loading = ref(false)
-const tableData = ref<Category[]>([])
-const total = ref(0)
-const currentPage = ref(1)
-const pageSize = ref(10)
-const searchForm = ref({ categoryName: '' })
-const selectedIds = ref<number[]>([])
+// 使用通用表格逻辑
+const {
+  loading,
+  tableData,
+  total,
+  currentPage,
+  pageSize,
+  selectedIds,
+  searchForm,
+  loadData,
+  handleSearch,
+  handleReset,
+  handleSelectionChange,
+  handleDelete,
+  handlePageChange
+} = useTable<Category, { categoryName: string }>({
+  fetchApi: getCategoryPage,
+  deleteApi: deleteCategories,
+  searchParams: { categoryName: '' },
+  deleteConfirmText: '确定要删除选中的类型吗？'
+})
 
 // 弹窗
 const dialogVisible = ref(false)
 const dialogMode = ref<'add' | 'edit'>('add')
 const dialogForm = ref({ id: 0, categoryName: '' })
-
-async function loadData() {
-  loading.value = true
-  try {
-    const res = await getCategoryPage({
-      page: currentPage.value,
-      limit: pageSize.value,
-      ...searchForm.value
-    })
-    if (res.data.code === 0) {
-      tableData.value = res.data.data.list
-      total.value = res.data.data.total
-    }
-  } finally {
-    loading.value = false
-  }
-}
-
-function handleSearch() {
-  currentPage.value = 1
-  loadData()
-}
-
-function handleReset() {
-  searchForm.value = { categoryName: '' }
-  handleSearch()
-}
 
 function handleAdd() {
   dialogForm.value = { id: 0, categoryName: '' }
@@ -67,40 +55,30 @@ async function handleSubmit() {
     ElMessage.warning('请输入类型名称')
     return
   }
-  if (dialogMode.value === 'add') {
-    const res = await addCategory({ categoryName: dialogForm.value.categoryName })
-    if (res.data.code === 0) {
-      ElMessage.success('新增成功')
-      dialogVisible.value = false
-      loadData()
+  
+  try {
+    if (dialogMode.value === 'add') {
+      const res = await addCategory({ categoryName: dialogForm.value.categoryName })
+      if (res.data.code === 0) {
+        ElMessage.success('新增成功')
+        dialogVisible.value = false
+        loadData()
+      } else {
+        ElMessage.error(res.data.msg || '新增失败')
+      }
     } else {
-      ElMessage.error(res.data.msg || '新增失败')
+      const res = await updateCategory(dialogForm.value)
+      if (res.data.code === 0) {
+        ElMessage.success('更新成功')
+        dialogVisible.value = false
+        loadData()
+      } else {
+        ElMessage.error(res.data.msg || '更新失败')
+      }
     }
-  } else {
-    const res = await updateCategory(dialogForm.value)
-    if (res.data.code === 0) {
-      ElMessage.success('更新成功')
-      dialogVisible.value = false
-      loadData()
-    } else {
-      ElMessage.error(res.data.msg || '更新失败')
-    }
+  } catch (error: any) {
+    ElMessage.error(error.message || '操作失败')
   }
-}
-
-async function handleDelete(ids: number[]) {
-  await ElMessageBox.confirm('确定要删除选中的类型吗？', '提示', { type: 'warning' })
-  const res = await deleteCategories(ids)
-  if (res.data.code === 0) {
-    ElMessage.success('删除成功')
-    loadData()
-  } else {
-    ElMessage.error(res.data.msg || '删除失败')
-  }
-}
-
-function handleSelectionChange(rows: Category[]) {
-  selectedIds.value = rows.map((r) => r.id)
 }
 
 onMounted(() => loadData())
@@ -125,7 +103,7 @@ onMounted(() => loadData())
     <el-card class="table-card" shadow="never">
       <template #header>
         <div class="card-header">
-          <span>小说类型列表</span>
+          <span>书籍类型列表</span>
           <div class="header-actions">
             <el-button type="primary" :icon="Plus" @click="handleAdd">新增</el-button>
             <el-button
@@ -153,9 +131,7 @@ onMounted(() => loadData())
         <el-table-column label="操作" width="150" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link :icon="Edit" @click="handleEdit(row)">编辑</el-button>
-            <el-button type="danger" link :icon="Delete" @click="handleDelete([row.id])">
-              删除
-            </el-button>
+            <el-button type="danger" link :icon="Delete" @click="handleDelete([row.id])">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -166,8 +142,8 @@ onMounted(() => loadData())
         :total="total"
         :page-sizes="[10, 20, 50]"
         layout="total, sizes, prev, pager, next"
-        @size-change="loadData"
-        @current-change="loadData"
+        @size-change="handlePageChange"
+        @current-change="handlePageChange"
         class="pagination"
       />
     </el-card>

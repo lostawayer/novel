@@ -1,69 +1,40 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { Search, Refresh, Plus, Delete, Edit, View, Check } from '@element-plus/icons-vue'
 import { getAuthorPage, deleteAuthors, auditAuthor, type Author } from '@/api/admin/authorApi'
+import { useTable, useDialog } from '@/composables'
 import AuthorDialog from './AuthorDialog.vue'
 
-const loading = ref(false)
-const tableData = ref<Author[]>([])
-const total = ref(0)
-const currentPage = ref(1)
-const pageSize = ref(10)
-const searchForm = ref({ account: '', authorName: '', auditStatus: '' })
-const selectedIds = ref<number[]>([])
-const dialogVisible = ref(false)
-const dialogMode = ref<'add' | 'edit' | 'view'>('add')
-const currentRow = ref<Author | null>(null)
+// 使用通用表格逻辑
+const {
+  loading,
+  tableData,
+  total,
+  currentPage,
+  pageSize,
+  selectedIds,
+  searchForm,
+  loadData,
+  handleSearch,
+  handleReset,
+  handleSelectionChange,
+  handleDelete,
+  handlePageChange
+} = useTable<Author, { account: string; authorName: string; auditStatus: string }>({
+  fetchApi: getAuthorPage,
+  deleteApi: deleteAuthors,
+  searchParams: { account: '', authorName: '', auditStatus: '' },
+  deleteConfirmText: '确定要删除选中的作者吗？',
+  idField: 'ID'
+})
+
+// 使用弹窗逻辑
+const dialog = useDialog<Author>()
 
 // 审核弹窗
 const auditDialogVisible = ref(false)
 const auditForm = ref({ id: 0, auditStatus: '是', auditReply: '' })
-
-async function loadData() {
-  loading.value = true
-  try {
-    const res = await getAuthorPage({
-      page: currentPage.value,
-      limit: pageSize.value,
-      ...searchForm.value
-    })
-    if (res.data.code === 0) {
-      tableData.value = res.data.data.list
-      total.value = res.data.data.total
-    }
-  } finally {
-    loading.value = false
-  }
-}
-
-function handleSearch() {
-  currentPage.value = 1
-  loadData()
-}
-
-function handleReset() {
-  searchForm.value = { account: '', authorName: '', auditStatus: '' }
-  handleSearch()
-}
-
-function handleAdd() {
-  currentRow.value = null
-  dialogMode.value = 'add'
-  dialogVisible.value = true
-}
-
-function handleEdit(row: Author) {
-  currentRow.value = row
-  dialogMode.value = 'edit'
-  dialogVisible.value = true
-}
-
-function handleView(row: Author) {
-  currentRow.value = row
-  dialogMode.value = 'view'
-  dialogVisible.value = true
-}
 
 function handleAudit(row: Author) {
   auditForm.value = {
@@ -75,33 +46,22 @@ function handleAudit(row: Author) {
 }
 
 async function submitAudit() {
-  const res = await auditAuthor(auditForm.value)
-  if (res.data.code === 0) {
-    ElMessage.success('审核成功')
-    auditDialogVisible.value = false
-    loadData()
-  } else {
-    ElMessage.error(res.data.msg || '审核失败')
+  try {
+    const res = await auditAuthor(auditForm.value)
+    if (res.data.code === 0) {
+      ElMessage.success('审核成功')
+      auditDialogVisible.value = false
+      loadData()
+    } else {
+      ElMessage.error(res.data.msg || '审核失败')
+    }
+  } catch (error: any) {
+    ElMessage.error(error.message || '审核失败')
   }
-}
-
-async function handleDelete(ids: number[]) {
-  await ElMessageBox.confirm('确定要删除选中的作者吗？', '提示', { type: 'warning' })
-  const res = await deleteAuthors(ids)
-  if (res.data.code === 0) {
-    ElMessage.success('删除成功')
-    loadData()
-  } else {
-    ElMessage.error(res.data.msg || '删除失败')
-  }
-}
-
-function handleSelectionChange(rows: Author[]) {
-  selectedIds.value = rows.map((r) => r.ID)
 }
 
 function handleDialogSuccess() {
-  dialogVisible.value = false
+  dialog.close()
   loadData()
 }
 
@@ -126,10 +86,10 @@ onMounted(() => loadData())
           <el-input v-model="searchForm.authorName" placeholder="请输入作者姓名" clearable />
         </el-form-item>
         <el-form-item label="审核状态">
-          <el-select v-model="searchForm.auditStatus" placeholder="请选择" clearable>
+          <el-select v-model="searchForm.auditStatus" placeholder="请选择" clearable style="width: 150px">
             <el-option label="待审核" value="待审核" />
-            <el-option label="是" value="是" />
-            <el-option label="否" value="否" />
+            <el-option label="已通过" value="是" />
+            <el-option label="未通过" value="否" />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -145,7 +105,7 @@ onMounted(() => loadData())
         <div class="card-header">
           <span>作者列表</span>
           <div class="header-actions">
-            <el-button type="primary" :icon="Plus" @click="handleAdd">新增</el-button>
+            <el-button type="primary" :icon="Plus" @click="dialog.openAdd()">新增</el-button>
             <el-button
               type="danger"
               :icon="Delete"
@@ -181,12 +141,10 @@ onMounted(() => loadData())
         </el-table-column>
         <el-table-column label="操作" width="240" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" link :icon="View" @click="handleView(row)">查看</el-button>
-            <el-button type="primary" link :icon="Edit" @click="handleEdit(row)">编辑</el-button>
+            <el-button type="primary" link :icon="View" @click="dialog.openView(row)">查看</el-button>
+            <el-button type="primary" link :icon="Edit" @click="dialog.openEdit(row)">编辑</el-button>
             <el-button type="success" link :icon="Check" @click="handleAudit(row)">审核</el-button>
-            <el-button type="danger" link :icon="Delete" @click="handleDelete([row.ID])">
-              删除
-            </el-button>
+            <el-button type="danger" link :icon="Delete" @click="handleDelete([row.ID])">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -197,17 +155,17 @@ onMounted(() => loadData())
         :total="total"
         :page-sizes="[10, 20, 50]"
         layout="total, sizes, prev, pager, next"
-        @size-change="loadData"
-        @current-change="loadData"
+        @size-change="handlePageChange"
+        @current-change="handlePageChange"
         class="pagination"
       />
     </el-card>
 
     <!-- 编辑弹窗 -->
     <AuthorDialog
-      v-model:visible="dialogVisible"
-      :mode="dialogMode"
-      :data="currentRow"
+      v-model:visible="dialog.visible.value"
+      :mode="dialog.mode.value"
+      :data="dialog.currentRow.value"
       @success="handleDialogSuccess"
     />
 

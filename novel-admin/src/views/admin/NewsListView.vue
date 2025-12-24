@@ -126,9 +126,9 @@ onMounted(() => loadData())
       >
         <el-table-column type="selection" width="50" />
         <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="TITLE" label="标题" min-width="200" />
-        <el-table-column prop="INTRODUCTION" label="简介" min-width="250" show-overflow-tooltip />
-        <el-table-column prop="ADD_TIME" label="创建时间" width="180" />
+        <el-table-column prop="title" label="标题" min-width="200" />
+        <el-table-column prop="introduction" label="简介" min-width="250" show-overflow-tooltip />
+        <el-table-column prop="addtime" label="创建时间" width="180" />
         <el-table-column label="操作" width="200" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link :icon="View" @click="handleView(row)">查看</el-button>

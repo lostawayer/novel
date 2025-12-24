@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * 小说持久化MyBatis实现
+ * 书籍持久化MyBatis实现
  * 
  * @author Novel Platform Team
  * @date 2024-12-11

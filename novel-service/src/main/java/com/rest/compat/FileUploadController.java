@@ -5,9 +5,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * 文件上传Controller
@@ -15,9 +17,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/file")
 public class FileUploadController {
-
-    // 上传目录 - resources/static/upload (开发时) 或运行目录下的 static/upload (生产时)
-    private static final String UPLOAD_DIR = "src/main/resources/static/upload/";
 
     /**
      * 上传文件
@@ -43,15 +42,18 @@ public class FileUploadController {
             // 生成新文件名
             String newFilename = System.currentTimeMillis() + suffix;
             
+            // 使用系统属性获取项目根目录
+            String projectDir = System.getProperty("user.dir");
+            Path uploadPath = Paths.get(projectDir, "novel-service", "src", "main", "resources", "static", "upload");
+            
             // 确保上传目录存在
-            File uploadDir = new File(UPLOAD_DIR);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
             }
             
             // 保存文件
-            File destFile = new File(uploadDir, newFilename);
-            file.transferTo(destFile);
+            Path destPath = uploadPath.resolve(newFilename);
+            Files.copy(file.getInputStream(), destPath);
             
             // 返回文件路径 (数据库存储格式)
             String filePath = "upload/" + newFilename;
@@ -59,6 +61,7 @@ public class FileUploadController {
             result.put("code", 0);
             result.put("msg", "上传成功");
             result.put("url", filePath);
+            result.put("file", newFilename);
             
         } catch (IOException e) {
             result.put("code", 1);

@@ -75,10 +75,32 @@ public class AuthorController {
     public WebResult<Author> login(
             @RequestParam(value = "account") @Parameter(description = "账号") String account,
             @RequestParam(value = "password") @Parameter(description = "密码") String password) {
-        Author author = authorManager.login(account, password);
+        // 先获取作者信息
+        Author author = authorManager.getAuthorForLogin(account);
         if (author == null) {
-            return WebResult.createFailureWebresult("账号或密码错误");
+            return WebResult.createFailureWebresult("账号不存在");
         }
+        
+        // 验证密码
+        if (!password.equals(author.getPassword())) {
+            return WebResult.createFailureWebresult("密码错误");
+        }
+        
+        // 检查审核状态
+        String auditStatus = author.getAuditStatus();
+        if (!"是".equals(auditStatus)) {
+            if ("待审核".equals(auditStatus)) {
+                return WebResult.createFailureWebresult("您的账号正在审核中，请耐心等待管理员审核");
+            } else {
+                String auditReply = author.getAuditReply();
+                String msg = "账号审核未通过";
+                if (auditReply != null && !auditReply.isEmpty()) {
+                    msg += "，原因：" + auditReply;
+                }
+                return WebResult.createFailureWebresult(msg);
+            }
+        }
+        
         // 隐藏密码
         author.setPassword(null);
         return WebResult.createSuccessWebResult(author);

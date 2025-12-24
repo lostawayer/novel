@@ -22,6 +22,12 @@ const chapters = ref<DataPage<NovelChapter>>({
   content: []
 })
 
+// 去除 HTML 标签，只显示纯文本预览
+function stripHtml(html: string | undefined): string {
+  if (!html) return ''
+  return html.replace(/<[^>]+>/g, '').substring(0, 100)
+}
+
 async function findChapters() {
   loading.value = true
   try {
@@ -116,7 +122,11 @@ onMounted(() => {
       <el-table-column type="selection" width="50" />
       <el-table-column prop="chapterOrder" label="章节号" width="100" />
       <el-table-column prop="chapterTitle" label="章节标题" width="200" show-overflow-tooltip />
-      <el-table-column prop="chapterContent" label="内容预览" min-width="300" show-overflow-tooltip />
+      <el-table-column label="内容预览" min-width="300" show-overflow-tooltip>
+        <template #default="{ row }">
+          {{ stripHtml(row.chapterContent) }}
+        </template>
+      </el-table-column>
       <el-table-column prop="publishTime" label="发布时间" width="160" />
       <el-table-column label="操作" width="150" fixed="right">
         <template #default="{ row }">

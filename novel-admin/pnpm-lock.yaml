@@ -45,6 +45,9 @@ importers:
       '@vue/tsconfig':
         specifier: ^0.8.1
         version: 0.8.1(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
+      sass:
+        specifier: ^1.77.0
+        version: 1.97.0
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
@@ -1382,7 +1385,6 @@ snapshots:
   chokidar@4.0.3:
     dependencies:
       readdirp: 4.1.2
-    optional: true
 
   combined-stream@1.0.8:
     dependencies:
@@ -1538,8 +1540,7 @@ snapshots:
 
   hookable@5.5.3: {}
 
-  immutable@5.1.4:
-    optional: true
+  immutable@5.1.4: {}
 
   is-extglob@2.1.1:
     optional: true
@@ -1627,8 +1628,7 @@ snapshots:
 
   proxy-from-env@1.1.0: {}
 
-  readdirp@4.1.2:
-    optional: true
+  readdirp@4.1.2: {}
 
   rfdc@1.4.1: {}
 
@@ -1667,7 +1667,6 @@ snapshots:
       source-map-js: 1.2.1
     optionalDependencies:
       '@parcel/watcher': 2.5.1
-    optional: true
 
   source-map-js@1.2.1: {}
 

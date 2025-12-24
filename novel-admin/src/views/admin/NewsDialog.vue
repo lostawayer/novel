@@ -36,16 +36,35 @@ const rules = {
   content: [{ required: true, message: '请输入内容', trigger: 'blur' }]
 }
 
+// HTML 转纯文本
+function htmlToText(html: string | undefined): string {
+  if (!html) return ''
+  return html
+    .replace(/<\/p>\s*<p>/gi, '\n\n')
+    .replace(/<p>/gi, '')
+    .replace(/<\/p>/gi, '')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .trim()
+}
+
+// 纯文本转 HTML
+function textToHtml(text: string | undefined): string {
+  if (!text) return ''
+  if (text.includes('<p>')) return text
+  const paragraphs = text.split(/\n+/).filter((p) => p.trim())
+  return paragraphs.map((p) => `<p>${p.trim()}</p>`).join('\n')
+}
+
 watch(
   () => props.visible,
   (val) => {
     if (val && props.data) {
       form.value = {
         id: props.data.id,
-        title: props.data.TITLE || '',
-        introduction: props.data.INTRODUCTION || '',
-        picture: props.data.PICTURE || '',
-        content: props.data.CONTENT || ''
+        title: props.data.title || '',
+        introduction: props.data.introduction || '',
+        picture: props.data.picture || '',
+        content: htmlToText(props.data.content)
       }
     } else if (val) {
       form.value = {
@@ -67,8 +86,12 @@ async function handleSubmit() {
   await formRef.value?.validate()
   loading.value = true
   try {
+    const submitData = {
+      ...form.value,
+      content: textToHtml(form.value.content)
+    }
     if (props.mode === 'add') {
-      const res = await addNews(form.value)
+      const res = await addNews(submitData)
       if (res.data.code === 0) {
         ElMessage.success('新增成功')
         emit('success')
@@ -76,7 +99,7 @@ async function handleSubmit() {
         ElMessage.error(res.data.msg || '新增失败')
       }
     } else {
-      const res = await updateNews(form.value)
+      const res = await updateNews(submitData)
       if (res.data.code === 0) {
         ElMessage.success('更新成功')
         emit('success')

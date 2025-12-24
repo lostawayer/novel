@@ -47,4 +47,9 @@ public interface IAuthorManager {
      * 作者登录
      */
     Author login(@NotBlank String account, @NotBlank String password);
+    
+    /**
+     * 获取作者信息用于登录验证
+     */
+    Author getAuthorForLogin(@NotBlank String account);
 }

@@ -2,7 +2,7 @@
 	<div>
 		<div class="container" :style='{"minHeight":"100vh","alignItems":"center","background":"url(http://codegen.caihongy.cn/20220727/404e0e98502c43b39dd6d72f6f8fdb8f.png)","display":"flex","width":"100%","backgroundSize":"cover","backgroundPosition":"center center","backgroundRepeat":"no-repeat","justifyContent":"center"}'>
 			<el-form v-if="pageFlag=='register'" :style='{"padding":"70px 20px","margin":"0","borderRadius":"10px","backgroundImage":"url(http://codegen.caihongy.cn/20220727/ef38081d06954a35bda8bd82e2c7d9f1.png)","width":"550px","backgroundSize":"100% 100% ","height":"auto"}' ref="rgsForm" class="rgs-form" :model="rgsForm">
-				<div v-if="true" :style='{"margin":"0 0 30px 0","color":"#000","textAlign":"center","width":"100%","lineHeight":"44px","fontSize":"24px","fontWeight":"600","height":"auto"}' class="title">基于Springboot小说网站系统的设计与实现注册</div>
+				<div v-if="true" :style='{"margin":"0 0 30px 0","color":"#000","textAlign":"center","width":"100%","lineHeight":"44px","fontSize":"24px","fontWeight":"600","height":"auto"}' class="title">基于Springboot“文趣阁”阅读平台的设计与实现注册</div>
 				<el-form-item :style='{"width":"60%","padding":"0","margin":"0 auto 15px","height":"auto"}' class="list-item" v-if="tableName=='yonghu'">
 					<div v-if="false" :style='{"width":"64px","lineHeight":"44px","fontSize":"14px","color":"rgba(64, 158, 255, 1)"}' class="lable">用户名</div>
 					<el-input  v-model="ruleForm.yonghuming"  autocomplete="off" placeholder="用户名"  type="text"  />

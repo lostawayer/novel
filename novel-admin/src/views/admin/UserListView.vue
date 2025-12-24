@@ -1,83 +1,37 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { onMounted } from 'vue'
 import { Search, Refresh, Plus, Delete, Edit, View } from '@element-plus/icons-vue'
 import { getUserPage, deleteUsers, type Reader } from '@/api/admin/userApi'
+import { useTable, useDialog } from '@/composables'
 import UserDialog from './UserDialog.vue'
 
-const loading = ref(false)
-const tableData = ref<Reader[]>([])
-const total = ref(0)
-const currentPage = ref(1)
-const pageSize = ref(10)
-const searchForm = ref({ username: '', realName: '' })
-const selectedIds = ref<number[]>([])
-const dialogVisible = ref(false)
-const dialogMode = ref<'add' | 'edit' | 'view'>('add')
-const currentRow = ref<Reader | null>(null)
+// 使用通用表格逻辑
+const {
+  loading,
+  tableData,
+  total,
+  currentPage,
+  pageSize,
+  selectedIds,
+  searchForm,
+  loadData,
+  handleSearch,
+  handleReset,
+  handleSelectionChange,
+  handleDelete,
+  handlePageChange
+} = useTable<Reader, { username: string; realName: string }>({
+  fetchApi: getUserPage,
+  deleteApi: deleteUsers,
+  searchParams: { username: '', realName: '' },
+  deleteConfirmText: '确定要删除选中的用户吗？'
+})
 
-async function loadData() {
-  loading.value = true
-  try {
-    const res = await getUserPage({
-      page: currentPage.value,
-      limit: pageSize.value,
-      ...searchForm.value
-    })
-    if (res.data.code === 0) {
-      tableData.value = res.data.data.list
-      total.value = res.data.data.total
-    }
-  } finally {
-    loading.value = false
-  }
-}
-
-function handleSearch() {
-  currentPage.value = 1
-  loadData()
-}
-
-function handleReset() {
-  searchForm.value = { username: '', realName: '' }
-  handleSearch()
-}
-
-function handleAdd() {
-  currentRow.value = null
-  dialogMode.value = 'add'
-  dialogVisible.value = true
-}
-
-function handleEdit(row: Reader) {
-  currentRow.value = row
-  dialogMode.value = 'edit'
-  dialogVisible.value = true
-}
-
-function handleView(row: Reader) {
-  currentRow.value = row
-  dialogMode.value = 'view'
-  dialogVisible.value = true
-}
-
-async function handleDelete(ids: number[]) {
-  await ElMessageBox.confirm('确定要删除选中的用户吗？', '提示', { type: 'warning' })
-  const res = await deleteUsers(ids)
-  if (res.data.code === 0) {
-    ElMessage.success('删除成功')
-    loadData()
-  } else {
-    ElMessage.error(res.data.msg || '删除失败')
-  }
-}
-
-function handleSelectionChange(rows: Reader[]) {
-  selectedIds.value = rows.map((r) => r.id)
-}
+// 使用弹窗逻辑
+const dialog = useDialog<Reader>()
 
 function handleDialogSuccess() {
-  dialogVisible.value = false
+  dialog.close()
   loadData()
 }
 
@@ -108,7 +62,7 @@ onMounted(() => loadData())
         <div class="card-header">
           <span>用户列表</span>
           <div class="header-actions">
-            <el-button type="primary" :icon="Plus" @click="handleAdd">新增</el-button>
+            <el-button type="primary" :icon="Plus" @click="dialog.openAdd()">新增</el-button>
             <el-button
               type="danger"
               :icon="Delete"
@@ -144,11 +98,9 @@ onMounted(() => loadData())
         </el-table-column>
         <el-table-column label="操作" width="200" fixed="right">
           <template #default="{ row }">
-            <el-button type="primary" link :icon="View" @click="handleView(row)">查看</el-button>
-            <el-button type="primary" link :icon="Edit" @click="handleEdit(row)">编辑</el-button>
-            <el-button type="danger" link :icon="Delete" @click="handleDelete([row.id])">
-              删除
-            </el-button>
+            <el-button type="primary" link :icon="View" @click="dialog.openView(row)">查看</el-button>
+            <el-button type="primary" link :icon="Edit" @click="dialog.openEdit(row)">编辑</el-button>
+            <el-button type="danger" link :icon="Delete" @click="handleDelete([row.id])">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -159,17 +111,17 @@ onMounted(() => loadData())
         :total="total"
         :page-sizes="[10, 20, 50]"
         layout="total, sizes, prev, pager, next"
-        @size-change="loadData"
-        @current-change="loadData"
+        @size-change="handlePageChange"
+        @current-change="handlePageChange"
         class="pagination"
       />
     </el-card>
 
     <!-- 弹窗 -->
     <UserDialog
-      v-model:visible="dialogVisible"
-      :mode="dialogMode"
-      :data="currentRow"
+      v-model:visible="dialog.visible.value"
+      :mode="dialog.mode.value"
+      :data="dialog.currentRow.value"
       @success="handleDialogSuccess"
     />
   </div>

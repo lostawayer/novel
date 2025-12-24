@@ -31,7 +31,7 @@ public interface IChapterMapper extends BaseMapper<Chapter> {
             @Param("authorAccount") String authorAccount);
 
     /**
-     * 根据小说ID查询所有章节
+     * 根据书籍ID查询所有章节
      */
     List<Chapter> selectByBookId(@Param("bookId") Long bookId);
 }

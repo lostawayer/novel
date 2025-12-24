@@ -76,7 +76,7 @@ async function onSubmit() {
         phone: model.value.phone,
         email: model.value.email
       })
-      ElMessage.success('注册成功，请登录')
+      ElMessage.success('注册成功！您的账号正在等待管理员审核，审核通过后即可登录。')
       router.push({ name: 'login' })
     } catch (error: any) {
       ElMessage.error(error.message || '注册失败')
@@ -103,6 +103,16 @@ function goLogin() {
           <h2 class="welcome-text">作者注册</h2>
           <h3 class="system-title">加入我们，开始创作之旅</h3>
         </div>
+
+        <el-alert 
+          type="info" 
+          :closable="false" 
+          style="margin-bottom: 20px;"
+        >
+          <template #title>
+            <span>注册后需等待管理员审核，审核通过后方可登录</span>
+          </template>
+        </el-alert>
 
         <el-form
           ref="formRef"

@@ -9,11 +9,11 @@
 			label-width="140px"
 		>
 			<template >
-				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' class="input" v-if="type!='info'"  label="小说类型" prop="xiaoshuoleixing">
-					<el-input v-model="ruleForm.xiaoshuoleixing" placeholder="小说类型" clearable  :readonly="ro.xiaoshuoleixing"></el-input>
+				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' class="input" v-if="type!='info'"  label="书籍类型" prop="xiaoshuoleixing">
+					<el-input v-model="ruleForm.xiaoshuoleixing" placeholder="书籍类型" clearable  :readonly="ro.xiaoshuoleixing"></el-input>
 				</el-form-item>
-				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' v-else class="input" label="小说类型" prop="xiaoshuoleixing">
-					<el-input v-model="ruleForm.xiaoshuoleixing" placeholder="小说类型" readonly></el-input>
+				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' v-else class="input" label="书籍类型" prop="xiaoshuoleixing">
+					<el-input v-model="ruleForm.xiaoshuoleixing" placeholder="书籍类型" readonly></el-input>
 				</el-form-item>
 			</template>
 			<el-form-item :style='{"padding":"0","margin":"0"}' class="btn">
@@ -112,7 +112,7 @@ export default {
 			
 			rules: {
 				xiaoshuoleixing: [
-					{ required: true, message: '小说类型不能为空', trigger: 'blur' },
+					{ required: true, message: '书籍类型不能为空', trigger: 'blur' },
 				],
 			}
 		};

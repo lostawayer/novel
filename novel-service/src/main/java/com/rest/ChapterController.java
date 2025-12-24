@@ -54,7 +54,7 @@ public class ChapterController {
     public WebResult<DataPage<Chapter>> findChapters(
             @RequestParam(value = "pageNumber", defaultValue = "1") @Parameter(description = "页码") int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "10") @Parameter(description = "每页数量") int pageSize,
-            @RequestParam(value = "bookId", required = false) @Parameter(description = "小说ID") Long bookId,
+            @RequestParam(value = "bookId", required = false) @Parameter(description = "书籍ID") Long bookId,
             @RequestParam(value = "authorAccount", required = false) @Parameter(description = "作者账号") String authorAccount) {
 
         DataPage<Chapter> chapters = chapterManager.findChapters(pageNumber, pageSize, bookId, authorAccount);
@@ -62,9 +62,9 @@ public class ChapterController {
     }
 
     @GetMapping("/listByBook")
-    @Operation(summary = "查询小说的所有章节", description = "根据小说ID查询所有章节")
+    @Operation(summary = "查询书籍的所有章节", description = "根据书籍ID查询所有章节")
     public WebResult<List<Chapter>> findChaptersByBook(
-            @RequestParam(value = "bookId") @Parameter(description = "小说ID") Long bookId) {
+            @RequestParam(value = "bookId") @Parameter(description = "书籍ID") Long bookId) {
         List<Chapter> chapters = chapterManager.findChaptersByBookId(bookId);
         return WebResult.createSuccessWebResult(chapters);
     }

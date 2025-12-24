@@ -27,6 +27,10 @@ export default defineConfig({
   server: {
     port: 8080,
     proxy: {
+      '/api': {
+        target: 'http://localhost:9080',
+        changeOrigin: true,
+      },
       '/novel': {
         target: 'http://localhost:9080',
         changeOrigin: true,
@@ -60,6 +64,10 @@ export default defineConfig({
         changeOrigin: true,
       },
       '/zuozhe': {
+        target: 'http://localhost:9080',
+        changeOrigin: true,
+      },
+      '/storeup': {
         target: 'http://localhost:9080',
         changeOrigin: true,
       },

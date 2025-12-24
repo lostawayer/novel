@@ -9,14 +9,14 @@
 			label-width="140px"
 		>
 			<template >
-				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' class="input" v-if="type!='info'"  label="小说名称" prop="xiaoshuomingcheng">
-					<el-input v-model="ruleForm.xiaoshuomingcheng" placeholder="小说名称" clearable  :readonly="ro.xiaoshuomingcheng"></el-input>
+				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' class="input" v-if="type!='info'"  label="书籍名称" prop="xiaoshuomingcheng">
+					<el-input v-model="ruleForm.xiaoshuomingcheng" placeholder="书籍名称" clearable  :readonly="ro.xiaoshuomingcheng"></el-input>
 				</el-form-item>
-				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' v-else class="input" label="小说名称" prop="xiaoshuomingcheng">
-					<el-input v-model="ruleForm.xiaoshuomingcheng" placeholder="小说名称" readonly></el-input>
+				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' v-else class="input" label="书籍名称" prop="xiaoshuomingcheng">
+					<el-input v-model="ruleForm.xiaoshuomingcheng" placeholder="书籍名称" readonly></el-input>
 				</el-form-item>
-				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' class="select" v-if="type!='info'"  label="小说类型" prop="xiaoshuoleixing">
-					<el-select :disabled="ro.xiaoshuoleixing" v-model="ruleForm.xiaoshuoleixing" placeholder="请选择小说类型" >
+				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' class="select" v-if="type!='info'"  label="书籍类型" prop="xiaoshuoleixing">
+					<el-select :disabled="ro.xiaoshuoleixing" v-model="ruleForm.xiaoshuoleixing" placeholder="请选择书籍类型" >
 						<el-option
 							v-for="(item,index) in xiaoshuoleixingOptions"
 							v-bind:key="index"
@@ -25,9 +25,9 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' v-else class="input" label="小说类型" prop="xiaoshuoleixing">
+				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' v-else class="input" label="书籍类型" prop="xiaoshuoleixing">
 					<el-input v-model="ruleForm.xiaoshuoleixing"
-						placeholder="小说类型" readonly></el-input>
+						placeholder="书籍类型" readonly></el-input>
 				</el-form-item>
 				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' class="upload" v-if="type!='info' && !ro.tupian" label="图片" prop="tupian">
 					<file-upload
@@ -68,16 +68,16 @@
 					<el-input v-model="ruleForm.fabushijian" placeholder="发布时间" readonly></el-input>
 				</el-form-item>
 			</template>
-				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' class="textarea" v-if="type!='info'" label="小说简介" prop="xiaoshuojianjie">
+				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' class="textarea" v-if="type!='info'" label="书籍简介" prop="xiaoshuojianjie">
 					<el-input
 					  style="min-width: 200px; max-width: 600px;"
 					  type="textarea"
 					  :rows="8"
-					  placeholder="小说简介"
+					  placeholder="书籍简介"
 					  v-model="ruleForm.xiaoshuojianjie" >
 					</el-input>
 				</el-form-item>
-				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' v-else-if="ruleForm.xiaoshuojianjie" label="小说简介" prop="xiaoshuojianjie">
+				<el-form-item :style='{"width":"100%","margin":"0 0 20px 0","display":"inline-block"}' v-else-if="ruleForm.xiaoshuojianjie" label="书籍简介" prop="xiaoshuojianjie">
 					<span :style='{"fontSize":"14px","lineHeight":"40px","color":"#333","fontWeight":"500","display":"inline-block"}'>{{ruleForm.xiaoshuojianjie}}</span>
 				</el-form-item>
 			<el-form-item :style='{"padding":"0","margin":"0"}' class="btn">
@@ -191,10 +191,10 @@ export default {
 			
 			rules: {
 				xiaoshuomingcheng: [
-					{ required: true, message: '小说名称不能为空', trigger: 'blur' },
+					{ required: true, message: '书籍名称不能为空', trigger: 'blur' },
 				],
 				xiaoshuoleixing: [
-					{ required: true, message: '小说类型不能为空', trigger: 'blur' },
+					{ required: true, message: '书籍类型不能为空', trigger: 'blur' },
 				],
 				tupian: [
 				],

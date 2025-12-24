@@ -5,8 +5,8 @@
 			<el-form class="center-form-pv" :style='{"margin":"0 0 20px"}' :inline="true" :model="searchForm">
 				<el-row :style='{"textAlign":"right","display":"block"}' >
 					<div :style='{"margin":"0 20px 0 0","display":"inline-block"}'>
-						<label :style='{"margin":"0 10px 0 0","color":"#000","display":"inline-block","lineHeight":"40px","fontSize":"14px","fontWeight":"500","height":"40px"}' class="item-label">小说类型</label>
-						<el-input v-model="searchForm.xiaoshuoleixing" placeholder="小说类型" clearable></el-input>
+						<label :style='{"margin":"0 10px 0 0","color":"#000","display":"inline-block","lineHeight":"40px","fontSize":"14px","fontWeight":"500","height":"40px"}' class="item-label">书籍类型</label>
+						<el-input v-model="searchForm.xiaoshuoleixing" placeholder="书籍类型" clearable></el-input>
 					</div>
 					<el-button :style='{"border":"0","cursor":"pointer","padding":"0 24px","backgroundColor":"#fff","color":"#333","backgroundImage":"url(http://codegen.caihongy.cn/20220727/d7a250a4599f4e7d9b11846454a93c80.png)","outline":"none","borderRadius":"4px","width":"100px","fontSize":"14px","backgroundSize":"100% 100%","lineHeight":"60px","height":"60px"}' type="success" @click="search()">查询</el-button>
 				</el-row>
@@ -33,7 +33,7 @@
 					<el-table-column :resizable='true' :sortable='true' label="索引" type="index" width="50" />
 					<el-table-column :resizable='true' :sortable='true'  
 						prop="xiaoshuoleixing"
-					label="小说类型">
+					label="书籍类型">
 						<template slot-scope="scope">
 							{{scope.row.xiaoshuoleixing}}
 						</template>

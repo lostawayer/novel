@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Search, Refresh, Plus, Delete, Edit, View, Back } from '@element-plus/icons-vue'
+import { Search, Refresh, Plus, Delete, Edit, View, Back, Document, Clock } from '@element-plus/icons-vue'
 import {
   getChapterPage,
   deleteChapters,
@@ -29,6 +29,7 @@ const selectedIds = ref<number[]>([])
 const dialogVisible = ref(false)
 const dialogMode = ref<'add' | 'edit' | 'view'>('add')
 const dialogLoading = ref(false)
+const lastSaveTime = ref('')
 const dialogForm = ref({
   id: 0,
   refId: 0,
@@ -38,6 +39,31 @@ const dialogForm = ref({
   vipRead: '否'
 })
 
+// 字数统计
+const wordCount = computed(() => {
+  const content = dialogForm.value.content || ''
+  return content.replace(/<[^>]+>/g, '').replace(/\s/g, '').length
+})
+
+// HTML 转纯文本（编辑时显示）
+function htmlToText(html: string | undefined): string {
+  if (!html) return ''
+  return html
+    .replace(/<\/p>\s*<p>/gi, '\n\n')
+    .replace(/<p>/gi, '')
+    .replace(/<\/p>/gi, '')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .trim()
+}
+
+// 纯文本转 HTML（保存时）
+function textToHtml(text: string | undefined): string {
+  if (!text) return ''
+  if (text.includes('<p>')) return text
+  const paragraphs = text.split(/\n+/).filter((p) => p.trim())
+  return paragraphs.map((p) => `<p>${p.trim()}</p>`).join('\n')
+}
+
 async function loadData() {
   if (!bookId.value) return
   loading.value = true
@@ -46,6 +72,8 @@ async function loadData() {
       page: currentPage.value,
       limit: pageSize.value,
       refId: bookId.value,
+      sort: 'CHAPTER_NUM',
+      order: 'asc',
       ...searchForm.value
     })
     if (res.data.code === 0) {
@@ -81,6 +109,7 @@ function handleAdd() {
     content: '',
     vipRead: '否'
   }
+  lastSaveTime.value = ''
   dialogMode.value = 'add'
   dialogVisible.value = true
 }
@@ -89,6 +118,7 @@ async function handleEdit(row: Chapter) {
   dialogLoading.value = true
   dialogVisible.value = true
   dialogMode.value = 'edit'
+  lastSaveTime.value = ''
   try {
     const res = await getChapterById(row.id)
     if (res.data.code === 0) {
@@ -98,7 +128,7 @@ async function handleEdit(row: Chapter) {
         refId: data.REF_ID,
         chapterNum: data.CHAPTER_NUM,
         chapterTitle: data.CHAPTER_TITLE,
-        content: data.CONTENT || '',
+        content: htmlToText(data.CONTENT) || '',
         vipRead: data.VIP_READ || '否'
       }
     }
@@ -111,6 +141,7 @@ async function handleView(row: Chapter) {
   dialogLoading.value = true
   dialogVisible.value = true
   dialogMode.value = 'view'
+  lastSaveTime.value = ''
   try {
     const res = await getChapterById(row.id)
     if (res.data.code === 0) {
@@ -120,7 +151,7 @@ async function handleView(row: Chapter) {
         refId: data.REF_ID,
         chapterNum: data.CHAPTER_NUM,
         chapterTitle: data.CHAPTER_TITLE,
-        content: data.CONTENT || '',
+        content: htmlToText(data.CONTENT) || '',
         vipRead: data.VIP_READ || '否'
       }
     }
@@ -134,8 +165,12 @@ async function handleSubmit() {
     ElMessage.warning('请输入章节标题')
     return
   }
+  const submitData = {
+    ...dialogForm.value,
+    content: textToHtml(dialogForm.value.content)
+  }
   if (dialogMode.value === 'add') {
-    const res = await addChapter(dialogForm.value)
+    const res = await addChapter(submitData)
     if (res.data.code === 0) {
       ElMessage.success('新增成功')
       dialogVisible.value = false
@@ -144,7 +179,7 @@ async function handleSubmit() {
       ElMessage.error(res.data.msg || '新增失败')
     }
   } else if (dialogMode.value === 'edit') {
-    const res = await updateChapter(dialogForm.value)
+    const res = await updateChapter(submitData)
     if (res.data.code === 0) {
       ElMessage.success('更新成功')
       dialogVisible.value = false
@@ -154,6 +189,38 @@ async function handleSubmit() {
     }
   } else {
     dialogVisible.value = false
+  }
+}
+
+// 保存草稿
+async function saveDraft() {
+  if (!dialogForm.value.chapterTitle) {
+    ElMessage.warning('请输入章节标题')
+    return
+  }
+  const submitData = {
+    ...dialogForm.value,
+    content: textToHtml(dialogForm.value.content)
+  }
+  if (dialogMode.value === 'add') {
+    const res = await addChapter(submitData)
+    if (res.data.code === 0) {
+      lastSaveTime.value = new Date().toLocaleTimeString()
+      ElMessage.success('草稿已保存')
+      // 保存后切换为编辑模式
+      dialogMode.value = 'edit'
+      loadData()
+    } else {
+      ElMessage.error(res.data.msg || '保存失败')
+    }
+  } else {
+    const res = await updateChapter(submitData)
+    if (res.data.code === 0) {
+      lastSaveTime.value = new Date().toLocaleTimeString()
+      ElMessage.success('草稿已保存')
+    } else {
+      ElMessage.error(res.data.msg || '保存失败')
+    }
   }
 }
 
@@ -257,38 +324,77 @@ onMounted(() => loadData())
     <el-dialog
       v-model="dialogVisible"
       :title="dialogMode === 'add' ? '新增章节' : dialogMode === 'edit' ? '编辑章节' : '查看章节'"
-      width="800px"
+      width="900px"
+      top="5vh"
+      :close-on-click-modal="false"
+      :lock-scroll="true"
+      :append-to-body="true"
+      destroy-on-close
     >
-      <el-form
-        v-loading="dialogLoading"
-        :model="dialogForm"
-        label-width="80px"
-        :disabled="dialogMode === 'view'"
-      >
-        <el-form-item label="章节号">
-          <el-input-number v-model="dialogForm.chapterNum" :min="1" />
-        </el-form-item>
-        <el-form-item label="章节标题" required>
-          <el-input v-model="dialogForm.chapterTitle" placeholder="请输入章节标题" />
-        </el-form-item>
-        <el-form-item label="VIP阅读">
-          <el-radio-group v-model="dialogForm.vipRead">
-            <el-radio value="是">是</el-radio>
-            <el-radio value="否">否</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="章节内容">
-          <el-input
-            v-model="dialogForm.content"
-            type="textarea"
-            :rows="15"
-            placeholder="请输入章节内容"
-          />
-        </el-form-item>
-      </el-form>
+      <div class="editor-container">
+        <!-- 顶部信息栏 -->
+        <div class="editor-header">
+          <div class="book-info">
+            <el-icon><Document /></el-icon>
+            <span>《{{ bookName }}》</span>
+          </div>
+          <div class="editor-stats">
+            <span class="word-count">
+              <el-icon><Edit /></el-icon>
+              字数：{{ wordCount }}
+            </span>
+            <span v-if="lastSaveTime" class="save-time">
+              <el-icon><Clock /></el-icon>
+              上次保存：{{ lastSaveTime }}
+            </span>
+          </div>
+        </div>
+
+        <el-form v-loading="dialogLoading" :model="dialogForm" label-position="top" :disabled="dialogMode === 'view'">
+          <!-- 章节信息行 -->
+          <div class="chapter-info-row">
+            <el-form-item label="章节号" class="chapter-order">
+              <el-input-number v-model="dialogForm.chapterNum" :min="1" :max="9999" controls-position="right" />
+            </el-form-item>
+            <el-form-item label="章节标题" class="chapter-title" required>
+              <el-input v-model="dialogForm.chapterTitle" placeholder="请输入章节标题" maxlength="100" show-word-limit />
+            </el-form-item>
+            <el-form-item label="VIP阅读" class="vip-switch">
+              <el-switch v-model="dialogForm.vipRead" active-value="是" inactive-value="否" active-text="是" inactive-text="否" />
+            </el-form-item>
+          </div>
+
+          <!-- 内容编辑区 -->
+          <el-form-item label="章节内容" class="content-area">
+            <el-input
+              v-model="dialogForm.content"
+              type="textarea"
+              :rows="12"
+              placeholder="在这里编辑章节内容...
+
+每个段落之间用空行分隔，保存时会自动格式化。"
+              resize="none"
+              class="content-textarea"
+            />
+          </el-form-item>
+        </el-form>
+      </div>
+
       <template #footer>
-        <el-button @click="dialogVisible = false">{{ dialogMode === 'view' ? '关闭' : '取消' }}</el-button>
-        <el-button v-if="dialogMode !== 'view'" type="primary" @click="handleSubmit">确定</el-button>
+        <div class="dialog-footer">
+          <div class="footer-left">
+            <el-button v-if="dialogMode !== 'view'" @click="saveDraft" :loading="dialogLoading">
+              <el-icon><Document /></el-icon>
+              保存草稿
+            </el-button>
+          </div>
+          <div class="footer-right">
+            <el-button @click="dialogVisible = false">{{ dialogMode === 'view' ? '关闭' : '取消' }}</el-button>
+            <el-button v-if="dialogMode !== 'view'" type="primary" @click="handleSubmit">
+              {{ dialogMode === 'add' ? '发布章节' : '保存修改' }}
+            </el-button>
+          </div>
+        </div>
       </template>
     </el-dialog>
   </div>
@@ -323,5 +429,105 @@ onMounted(() => loadData())
 .pagination {
   margin-top: 16px;
   justify-content: flex-end;
+}
+
+/* 章节编辑弹窗样式 */
+.editor-container {
+  padding: 20px;
+  background: #fafafa;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #fff;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.book-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #303133;
+}
+
+.editor-stats {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: #909399;
+}
+
+.word-count, .save-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chapter-info-row {
+  display: flex;
+  gap: 16px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.chapter-order {
+  width: 140px;
+  flex-shrink: 0;
+}
+
+.chapter-title {
+  flex: 1;
+}
+
+.vip-switch {
+  width: 120px;
+  flex-shrink: 0;
+}
+
+.content-area {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.content-textarea :deep(.el-textarea__inner) {
+  font-family: 'Microsoft YaHei', 'PingFang SC', sans-serif;
+  font-size: 15px;
+  line-height: 1.8;
+  padding: 16px;
+  background: #fafafa;
+  border-radius: 6px;
+}
+
+.content-textarea :deep(.el-textarea__inner:focus) {
+  background: #fff;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.footer-left, .footer-right {
+  display: flex;
+  gap: 10px;
+}
+
+:deep(.el-form-item__label) {
+  font-weight: 500;
+  color: #303133;
 }
 </style>

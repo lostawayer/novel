@@ -3,7 +3,7 @@
     <div class="container" :style='{"minHeight":"100vh","alignItems":"center","background":"url(http://codegen.caihongy.cn/20220727/5c8b6a2aa5b4484cb1e90615f9c60954.png)","display":"flex","width":"100%","backgroundSize":"cover","backgroundPosition":"center center","backgroundRepeat":"no-repeat","justifyContent":"center"}'>
 
       <el-form :style='{"padding":"100px 50px","margin":"0","borderRadius":"10px","backgroundImage":"url(http://codegen.caihongy.cn/20220727/ef38081d06954a35bda8bd82e2c7d9f1.png)","width":"600px","backgroundSize":"100% 100%","height":"auto"}'>
-        <div v-if="true" :style='{"margin":"0 0 30px 0","color":"#000","textAlign":"center","width":"100%","lineHeight":"44px","fontSize":"24px","fontWeight":"600","height":"auto"}' class="title-container">基于Springboot小说网站系统的设计与实现登录</div>
+        <div v-if="true" :style='{"margin":"0 0 30px 0","color":"#000","textAlign":"center","width":"100%","lineHeight":"44px","fontSize":"24px","fontWeight":"600","height":"auto"}' class="title-container">基于Springboot“文趣阁”阅读平台的设计与实现登录</div>
         <div v-if="loginType==1" class="list-item" :style='{"width":"50%","margin":"0 auto 10px","alignItems":"center","flexWrap":"wrap","display":"flex"}'>
           <div v-if="false" class="lable" :style='{"width":"64px","lineHeight":"44px","fontSize":"14px","color":"rgba(64, 158, 255, 1)"}'>用户名：</div>
           <input :style='{"border":"0px solid rgba(64, 158, 255, 1)","padding":"0 10px","boxShadow":"0px 4px 10px 0px rgba(0,0,0,0.3020)","color":"#333","outlineOffset":"4px","width":"100%","fontSize":"14px","height":"44px"}' placeholder="请输入用户名" name="username" type="text" v-model="rulesForm.username">

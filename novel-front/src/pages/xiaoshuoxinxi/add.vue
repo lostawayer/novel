@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <h2>添加/编辑小说</h2>
-    <p>添加/编辑小说功能开发中...</p>
+    <h2>添加/编辑书籍</h2>
+    <p>添加/编辑书籍功能开发中...</p>
   </div>
 </template>
 

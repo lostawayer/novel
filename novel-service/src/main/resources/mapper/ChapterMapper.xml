@@ -34,7 +34,7 @@
         </where>
     </select>
     
-    <!-- 根据小说ID查询所有章节 -->
+    <!-- 根据书籍ID查询所有章节 -->
     <select id="selectByBookId" resultMap="ChapterResultMap">
         SELECT * FROM NOVEL_CHAPTER
         WHERE REF_ID = #{bookId}

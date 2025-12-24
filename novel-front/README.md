@@ -1,6 +1,6 @@
-# Novel Front - 小说网站系统前端
+# Novel Front - “文趣阁”阅读平台前端
 
-基于 Vue 3 + TypeScript + Vite + Element Plus 的小说网站系统前端项目。
+基于 Vue 3 + TypeScript + Vite + Element Plus 的“文趣阁”阅读平台前端项目。
 
 ## 技术栈
 
@@ -38,7 +38,7 @@ novel-front/
 │   │   ├── register/   # 注册
 │   │   ├── center/     # 个人中心
 │   │   ├── messages/   # 留言板
-│   │   ├── xiaoshuoxinxi/  # 小说管理
+│   │   ├── xiaoshuoxinxi/  # 书籍管理
 │   │   └── index.vue   # 主布局
 │   ├── router/         # 路由配置
 │   │   └── index.ts
@@ -76,7 +76,7 @@ npm install
 VITE_APP_BASE_URL=http://localhost:8088
 
 # 应用标题
-VITE_APP_TITLE=小说网站系统
+VITE_APP_TITLE=“文趣阁”阅读平台
 ```
 
 创建 `.env.production` 文件：
@@ -86,7 +86,7 @@ VITE_APP_TITLE=小说网站系统
 VITE_APP_BASE_URL=http://your-production-url
 
 # 应用标题
-VITE_APP_TITLE=小说网站系统
+VITE_APP_TITLE=“文趣阁”阅读平台
 ```
 
 ### 3. 复制静态资源
@@ -116,9 +116,9 @@ npm run build
 ## 主要功能
 
 - ✅ 用户注册/登录
-- ✅ 首页展示（推荐、最新、热门小说）
-- ✅ 小说列表（搜索、分页）
-- ✅ 小说详情
+- ✅ 首页展示（推荐、最新、热门书籍）
+- ✅ 书籍列表（搜索、分页）
+- ✅ 书籍详情
 - ✅ 个人中心
 - ✅ 留言板
 - ✅ 收藏功能
@@ -129,9 +129,9 @@ npm run build
 
 以下功能需要根据具体业务逻辑继续开发：
 
-1. **小说相关页面**：
-   - `xiaoshuoxinxi/detail.vue` - 小说详情页
-   - `xiaoshuoxinxi/add.vue` - 添加/编辑小说
+1. **书籍相关页面**：
+   - `xiaoshuoxinxi/detail.vue` - 书籍详情页
+   - `xiaoshuoxinxi/add.vue` - 添加/编辑书籍
    - `xiaoshuoxinxi/chapter.vue` - 章节管理
 
 2. **用户相关页面**：

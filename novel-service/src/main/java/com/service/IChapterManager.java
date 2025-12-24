@@ -39,7 +39,7 @@ public interface IChapterManager {
     DataPage<Chapter> findChapters(int pageNumber, int pageSize, Long bookId, String authorAccount);
 
     /**
-     * 根据小说ID查询所有章节（按序号排序）
+     * 根据书籍ID查询所有章节（按序号排序）
      */
     List<Chapter> findChaptersByBookId(@NotNull Long bookId);
 }

@@ -1,0 +1,19 @@
+# 支付宝沙箱配置
+# 请到 https://openhome.alipay.com/develop/sandbox/app 获取以下配置
+alipay:
+    # 沙箱应用APPID
+    app-id: 9021000158679229
+    # 应用私钥（在沙箱环境生成）
+    private-key: MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCgOjqjFuLjJmoXDTOolsltagxlbJ2IdI4dxuuHlDqKyqsDXd1AzobgU6Z4kxPdqvqILCHMGeUDz44vU/3UJVxXvqEZ22qrOif0Yc/NEBwqkPPsXhCZB4GV9Jn4IaTiQmMLOo0sd24jUUFwv8qijxxB7WkF0EoGjysOIFkg6NN5ZHYnO6shUZ6zfJHinH+aIwa3TGX7GvgSF+8qXS5GzmGuIwZz64ryOcD2hbzzL5yaBjK8vciUYZ96ni764kH/H3KbOq7EUNB7Fpm0oWh+7aaRIOz41pU7ZihyshPxhCP1bRuYAqmRUgBtSIkEc2b6HFDCBABN8zpoMollq2tYFqHvAgMBAAECggEAXrmuGucX4cS/KbujU8M5eFce1wN8qsSFlHMaob/vUEh7C/V9LagrswmhPF1vfDht/v1gScLxUuxtGevk/3vK+RD5O0kt6ebq4h7FdG1WyY+CtbXyyBXY9adzM2/og99NoMDP338H/Rc3wgmRKcPDp/JMiaRXb0NK6AIVz0/2XigkdZEaQZJ3fHUGrlMkX1iGZUtV+MsVfeog72Z7TAdN/JHIqT0aGvp7zAnDU5BKhizPiQ0aT4xTXM8uZKHaluHMYPgU8uV/a1XbczSAbeif1RLfWo9ArEbiK166ELlVqDsvB6AX1Eq8zpkuHyhEdHxVJbjUaINA+2D4zhOizCwQyQKBgQDwa1y7jkn3tv8X6ShiVVZ5MgblxLJ/0oSiPc1mOZtSPSkAP/zIkkNIGryP+6NK3LhewHU78FTrgTslifdy46yx3FzPqkuXEvtTYcZPWe1vvTKMu4qEp8hHiF6oHBhAxqL9domsv7l7Rih4T7baHtZxsRLqMlC+e6p64a5+WPCbIwKBgQCqnHS84O6M/mBe0Os++4tmX55EqPjFd8lGy6yhhWAwJ6gr4ljj35Q3Y9HmyDPkplkYbnQRvZvsbRPBJtxlovYk38tg0P5YDW0TFWbRlbAkV7WM4CMBY7kp7lSgouLZc/0mmkKKVomgaY/RAmVtymY3bpFAzwZ2aMaIvmgoEufAxQKBgQCPWiTn/HakSqwd8LtQrrup9idgt4ELcFX/e0RO0MiJJ8ibyouKeJO/mZmXbJ64E5WngbAldi7cYakHwBUYnyKoxtFcTZlW0k2jMSiSxfcqajCK84QrhvOHm4t9R4s6jHZBFX4P0B3joDifTECmHD8XeVLi6+9zNL+5F3n5AkUs6wKBgHPGki1uUlNZd5pAGbN2zYUeE++x3odaHzsskaxWLwzejG+jPQD9wr3HvjPm3dgmzkUXByrWyY2qA4LKVTufV3t0ZrX/fOnRypftqQVGl+5BmtDLdNXHj2qV8dXEUz6PSFW+zrLDwMcbe12xS5UyiSTKokUhd9g4h6lZ1KKFGcGlAoGAMzmVmbLl4JZtKXLmku3fw04oX2jjtoiSMJX2bB+ddu7zPj0hulgumfwkky33gnYxUS81l3L1IsUfFupIMMWciv33t93WI2NnlxQo2W8YuhhFGsT6n4/c/3GS/UupeugUEzca9YmvxKe3yqIR3rlxeRXdWWIaCxt/ek5WqTVo4q4=
+    # 支付宝公钥（在沙箱环境获取）
+    alipay-public-key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqgZaEJ5y5nKpXWo+11ndjHaNEfk+KltIOiaaocAB6Qw80JIUcBun3X+DzrTxaUvhVo+OWJmGPLO+RgwrRFiKUq1RLkS2oAvdPQF1AylWa/6eG3zGdanZHVm8K4uf2Z2Ivlo5XuAfytMlNEM0MAbIgobR/NLSONlqzFw3Lc3VgpqhaPmB1M4Jvcb5FsRgVb8r7bhGsMP6n1DM/+oJ6M0ULuHE+hLAVtq281RpmlxYJdRfKZEOAJ6a48cjpiBTmpdw3CIy9qYhPagRAJFWhpFWzW7UUFVfUaOIdjvL2XvwRV6jPbuufcM+PN5FfEM/rSuLbSZzY28azRTtc5B29qKaUQIDAQAB
+    # 沙箱网关地址（固定值）
+    gateway-url: https://openapi-sandbox.dl.alipaydev.com/gateway.do
+    # 支付成功后的回调地址（你的前端地址）
+    return-url: http://localhost:8080/index/center?tab=vip&payResult=success
+    # 支付宝异步通知地址（你的后端地址，需要公网可访问）
+    notify-url: http://localhost:9080/alipay/notify
+    # 签名类型
+    sign-type: RSA2
+    # 字符编码
+    charset: UTF-8

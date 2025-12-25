@@ -71,6 +71,10 @@ export default defineConfig({
         target: 'http://localhost:9080',
         changeOrigin: true,
       },
+      '/alipay': {
+        target: 'http://localhost:9080',
+        changeOrigin: true,
+      },
     },
   },
   build: {

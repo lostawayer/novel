@@ -8,7 +8,7 @@ spring:
     banner:
         location: classpath:banner.txt
     config:
-        import: classpath:config/medical.yaml,classpath:config/springdoc.yaml,classpath:config/datasource.yaml,classpath:config/mybatis.yaml,classpath:config/log.yaml,classpath:config/actuator.yaml,classpath:config/freemarker.yaml,classpath:config/redis.yaml,classpath:config/security.yaml,classpath:config/novel.yaml,classpath:config/static.yaml
+        import: classpath:config/medical.yaml,classpath:config/springdoc.yaml,classpath:config/datasource.yaml,classpath:config/mybatis.yaml,classpath:config/log.yaml,classpath:config/actuator.yaml,classpath:config/freemarker.yaml,classpath:config/redis.yaml,classpath:config/security.yaml,classpath:config/novel.yaml,classpath:config/static.yaml,classpath:config/alipay.yaml
     message:
         basename: messages
     web:

@@ -31,6 +31,8 @@ medical:
             - /storeup/**
             - /discussxiaoshuoxinxi/**
             - /chapterxiaoshuoxinxi/**
+            # 支付接口
+            - /alipay/**
             # 选项接口
             - /option/**
         user:

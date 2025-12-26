@@ -63,6 +63,7 @@ export function updateBook(data: {
   categoryName?: string
   picture?: string
   description?: string
+  price?: number
 }) {
   return request.post<CompatResponse<null>>('/xiaoshuoxinxi/update', data)
 }

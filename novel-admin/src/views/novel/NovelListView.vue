@@ -165,6 +165,12 @@ onMounted(() => {
         </template>
       </el-table-column>
       <el-table-column prop="authorName" label="作者姓名" width="100" />
+      <el-table-column prop="price" label="价格" width="80">
+        <template #default="{ row }">
+          <el-tag v-if="!row.price || row.price === 0" type="success" size="small">免费</el-tag>
+          <span v-else style="color: #e6a23c;">¥{{ row.price }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="publishTime" label="发布时间" width="160" />
       <el-table-column prop="introduction" label="简介" min-width="200" show-overflow-tooltip />
       <el-table-column label="操作" width="200" fixed="right">

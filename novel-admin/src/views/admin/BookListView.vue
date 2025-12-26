@@ -28,7 +28,8 @@ const editForm = ref({
   novelName: '',
   categoryName: '',
   picture: '',
-  description: ''
+  description: '',
+  price: 0
 })
 
 async function loadData() {
@@ -84,7 +85,8 @@ async function handleEdit(row: NovelInfo) {
         novelName: data.NOVEL_NAME || data.novelName || '',
         categoryName: data.CATEGORY_NAME || data.categoryName || '',
         picture: data.PICTURE || data.picture || '',
-        description: data.DESCRIPTION || data.description || ''
+        description: data.DESCRIPTION || data.description || '',
+        price: data.PRICE || data.price || 0
       }
     } else {
       ElMessage.error(res.data.msg || '获取书籍信息失败')
@@ -190,6 +192,12 @@ onMounted(() => {
         <el-table-column prop="NOVEL_NAME" label="书籍名称" min-width="150" />
         <el-table-column prop="CATEGORY_NAME" label="类型" width="100" />
         <el-table-column prop="AUTHOR_NAME" label="作者" width="120" />
+        <el-table-column label="价格" width="80">
+          <template #default="{ row }">
+            <el-tag v-if="!row.PRICE || row.PRICE === 0" type="success" size="small">免费</el-tag>
+            <span v-else style="color: #e6a23c;">¥{{ row.PRICE }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="封面" width="100">
           <template #default="{ row }">
             <el-image
@@ -265,6 +273,10 @@ onMounted(() => {
         </el-form-item>
         <el-form-item label="书籍简介">
           <el-input v-model="editForm.description" type="textarea" :rows="4" placeholder="请输入简介" />
+        </el-form-item>
+        <el-form-item label="书籍价格">
+          <el-input-number v-model="editForm.price" :min="0" :precision="2" :step="1" />
+          <span style="margin-left: 10px; color: #909399; font-size: 12px;">0表示免费</span>
         </el-form-item>
       </el-form>
       <template #footer>

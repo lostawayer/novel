@@ -76,11 +76,26 @@
                             <p v-if="userInfo.vip === '是'" class="vip-tip">
                                 尊享VIP特权，畅读所有VIP章节
                             </p>
-                            <p v-else class="vip-tip">
+                            <p v-if="userInfo.vip === '是' && userInfo.vipExpireTime" class="vip-expire">
+                                到期时间：{{ formatDate(userInfo.vipExpireTime) }}
+                            </p>
+                            <p v-else-if="userInfo.vip !== '是'" class="vip-tip">
                                 开通VIP会员，解锁全部VIP章节内容
                             </p>
+                            
+                            <!-- 已是VIP时显示续费按钮 -->
+                            <el-button 
+                                v-if="userInfo.vip === '是'" 
+                                type="warning" 
+                                plain 
+                                @click="showRenewPanel = !showRenewPanel"
+                                class="renew-btn"
+                            >
+                                {{ showRenewPanel ? '收起' : '续费会员' }}
+                            </el-button>
                         </div>
 
+                        <!-- VIP开通（非VIP用户直接显示） -->
                         <div v-if="userInfo.vip !== '是'" class="vip-plans">
                             <h3>选择会员套餐</h3>
                             <div class="plan-list">
@@ -95,42 +110,54 @@
                                 >
                                     <div class="plan-name">{{ plan.name }}</div>
                                     <div class="plan-price">
-                                        <span class="price"
-                                            >¥{{ plan.price }}</span
-                                        >
-                                        <span
-                                            class="original"
-                                            v-if="plan.original"
-                                            >¥{{ plan.original }}</span
-                                        >
+                                        <span class="price">¥{{ plan.price }}</span>
+                                        <span class="original" v-if="plan.original">¥{{ plan.original }}</span>
                                     </div>
                                     <div class="plan-desc">{{ plan.desc }}</div>
-                                    <el-tag
-                                        v-if="plan.tag"
-                                        type="danger"
-                                        size="small"
-                                        class="plan-tag"
-                                        >{{ plan.tag }}</el-tag
-                                    >
+                                    <el-tag v-if="plan.tag" type="danger" size="small" class="plan-tag">{{ plan.tag }}</el-tag>
                                 </div>
                             </div>
-
                             <div class="pay-section">
-                                <el-button
-                                    type="warning"
-                                    size="large"
-                                    @click="handleBuyVip"
-                                    :loading="buying"
-                                >
+                                <el-button type="warning" size="large" @click="handleBuyVip" :loading="buying">
                                     立即开通VIP
                                 </el-button>
-                                <p class="pay-tip">
-                                    * 支付将跳转到支付宝沙箱环境完成
-                                </p>
+                                <p class="pay-tip">* 支付将跳转到支付宝沙箱环境完成</p>
                             </div>
                         </div>
 
-                        <div v-else class="vip-benefits">
+                        <!-- VIP续费（折叠面板） -->
+                        <el-collapse-transition>
+                            <div v-if="userInfo.vip === '是' && showRenewPanel" class="vip-plans renew-panel">
+                                <h3>续费套餐</h3>
+                                <div class="plan-list">
+                                    <div
+                                        v-for="plan in vipPlans"
+                                        :key="plan.type"
+                                        :class="[
+                                            'plan-item',
+                                            { active: selectedPlan === plan.type },
+                                        ]"
+                                        @click="selectedPlan = plan.type"
+                                    >
+                                        <div class="plan-name">{{ plan.name }}</div>
+                                        <div class="plan-price">
+                                            <span class="price">¥{{ plan.price }}</span>
+                                            <span class="original" v-if="plan.original">¥{{ plan.original }}</span>
+                                        </div>
+                                        <div class="plan-desc">{{ plan.desc }}</div>
+                                        <el-tag v-if="plan.tag" type="danger" size="small" class="plan-tag">{{ plan.tag }}</el-tag>
+                                    </div>
+                                </div>
+                                <div class="pay-section">
+                                    <el-button type="warning" size="large" @click="handleBuyVip" :loading="buying">
+                                        立即续费
+                                    </el-button>
+                                    <p class="pay-tip">* 续费时长将在原到期时间基础上累加</p>
+                                </div>
+                            </div>
+                        </el-collapse-transition>
+
+                        <div v-if="userInfo.vip === '是'" class="vip-benefits">
                             <h3>VIP会员特权</h3>
                             <div class="benefit-list">
                                 <div class="benefit-item">
@@ -152,6 +179,55 @@
                                     <span>更多特权开发中...</span>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </el-tab-pane>
+
+                <el-tab-pane label="订单记录" name="orders">
+                    <div class="orders-container">
+                        <el-table :data="orderList" style="width: 100%" v-loading="orderLoading" stripe>
+                            <el-table-column prop="orderNo" label="订单号" min-width="180" show-overflow-tooltip />
+                            <el-table-column label="订单类型" width="120" align="center">
+                                <template #default="{ row }">
+                                    <el-tag v-if="row.orderType === 'VIP'" type="warning" size="small">VIP会员</el-tag>
+                                    <el-tag v-else type="success" size="small">购买书籍</el-tag>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="商品信息" min-width="140">
+                                <template #default="{ row }">
+                                    <span v-if="row.orderType === 'VIP'">
+                                        {{ row.vipType === 'month' ? '月度会员' : row.vipType === 'quarter' ? '季度会员' : '年度会员' }}
+                                        ({{ row.days }}天)
+                                    </span>
+                                    <span v-else>《{{ row.bookName }}》</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="amount" label="金额" width="100" align="center">
+                                <template #default="{ row }">
+                                    <span class="price-text">¥{{ row.amount }}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="status" label="状态" width="100" align="center">
+                                <template #default="{ row }">
+                                    <el-tag :type="row.status === 'PAID' ? 'success' : 'warning'" size="small">
+                                        {{ row.status === 'PAID' ? '已支付' : '待支付' }}
+                                    </el-tag>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="createTime" label="下单时间" min-width="160" align="center">
+                                <template #default="{ row }">{{ formatDate(row.createTime) }}</template>
+                            </el-table-column>
+                        </el-table>
+                        <el-empty v-if="!orderLoading && orderList.length === 0" description="暂无订单记录" />
+                        <div class="order-pagination" v-if="orderTotal > 10">
+                            <el-pagination
+                                background
+                                layout="total, prev, pager, next"
+                                :total="orderTotal"
+                                :page-size="10"
+                                v-model:current-page="orderPage"
+                                @current-change="loadOrders"
+                            />
                         </div>
                     </div>
                 </el-tab-pane>
@@ -206,6 +282,7 @@ const route = useRoute();
 const activeTab = ref("info");
 const buying = ref(false);
 const selectedPlan = ref("month");
+const showRenewPanel = ref(false);
 
 const userInfo = reactive<any>({
     id: "",
@@ -216,7 +293,14 @@ const userInfo = reactive<any>({
     youxiang: "",
     shouji: "",
     vip: "否",
+    vipExpireTime: null,
 });
+
+// 订单相关
+const orderList = ref<any[]>([]);
+const orderTotal = ref(0);
+const orderPage = ref(1);
+const orderLoading = ref(false);
 
 const passwordForm = reactive({
     oldPassword: "",
@@ -255,17 +339,68 @@ const vipPlans = [
 const loadUserInfo = async () => {
     const info = getUserInfo();
     if (info) {
-        Object.assign(userInfo, info);
-        // 从服务器获取最新VIP状态
+        // 先用本地数据初始化
+        userInfo.id = info.id;
+        userInfo.yonghuming = info.yonghuming;
+        userInfo.xingming = info.xingming;
+        userInfo.xingbie = info.xingbie;
+        userInfo.touxiang = info.touxiang;
+        userInfo.youxiang = info.youxiang;
+        userInfo.shouji = info.shouji;
+        
+        // 从服务器获取最新VIP状态（以服务器为准）
         try {
             const res = await get("/yonghu/info", { userId: info.id });
             if (res.code === 0 && res.data) {
                 userInfo.vip = res.data.vip || "否";
+                userInfo.vipExpireTime = res.data.vipExpireTime || null;
+                
+                // 同步更新本地存储
+                const updatedInfo = { ...info, vip: userInfo.vip, vipExpireTime: userInfo.vipExpireTime };
+                setUserInfo(updatedInfo);
             }
         } catch (e) {
             console.error("获取VIP状态失败", e);
+            userInfo.vip = info.vip || "否";
         }
+        
+        // 加载订单记录
+        loadOrders();
     }
+};
+
+// 加载订单记录
+const loadOrders = async () => {
+    if (!userInfo.id) return;
+    orderLoading.value = true;
+    try {
+        const res = await get("/alipay/orders", { 
+            userId: userInfo.id, 
+            page: orderPage.value, 
+            limit: 5 
+        });
+        if (res.code === 0 && res.data) {
+            orderList.value = res.data.list || [];
+            orderTotal.value = res.data.total || 0;
+        }
+    } catch (e) {
+        console.error("获取订单失败", e);
+    } finally {
+        orderLoading.value = false;
+    }
+};
+
+// 格式化日期
+const formatDate = (dateStr: string) => {
+    if (!dateStr) return '-';
+    const date = new Date(dateStr);
+    return date.toLocaleString('zh-CN', { 
+        year: 'numeric', 
+        month: '2-digit', 
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
 };
 
 // 更新个人信息
@@ -362,38 +497,28 @@ const handleBuyVip = async () => {
     }
 };
 
-onMounted(() => {
-    loadUserInfo();
-
+onMounted(async () => {
     // 处理支付宝回调
     const payResult = route.query.payResult;
     const tab = route.query.tab;
+    const outTradeNo = (route.query.out_trade_no || route.query.outTradeNo) as string;
 
     if (tab === "vip") {
         activeTab.value = "vip";
     }
 
-    if (payResult === "success") {
-        // 支付成功，调用后端确认并刷新VIP状态
-        const outTradeNo = route.query.out_trade_no as string;
-        if (outTradeNo) {
-            // 调用后端确认支付
-            get('/alipay/return', { out_trade_no: outTradeNo }).then(() => {
-                loadUserInfo().then(() => {
-                    if (userInfo.vip === "是") {
-                        ElMessage.success("🎉 恭喜您成为VIP会员！");
-                    }
-                });
-            });
-        } else {
-            // 没有订单号，直接刷新状态
-            setTimeout(async () => {
-                await loadUserInfo();
-                if (userInfo.vip === "是") {
-                    ElMessage.success("🎉 恭喜您成为VIP会员！");
-                }
-            }, 1000);
+    if (payResult === "success" && outTradeNo) {
+        // 支付成功，调用后端确认支付
+        try {
+            await get('/alipay/return', { out_trade_no: outTradeNo });
+            await loadUserInfo();
+            ElMessage.success("🎉 恭喜您成为VIP会员！");
+        } catch (e) {
+            console.error("确认支付失败:", e);
+            await loadUserInfo();
         }
+    } else {
+        await loadUserInfo();
     }
 });
 </script>
@@ -555,5 +680,65 @@ onMounted(() => {
         font-size: 14px;
         color: #666;
     }
+}
+
+.vip-expire {
+    color: #e6a23c;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.renew-btn {
+    margin-top: 20px;
+}
+
+.renew-panel {
+    background: #fdf6ec;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.order-section {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+    
+    h3 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+}
+
+.view-more {
+    text-align: center;
+    margin-top: 15px;
+}
+
+.orders-container {
+    padding: 20px;
+    
+    .price-text {
+        color: #e6a23c;
+        font-weight: bold;
+    }
+    
+    :deep(.el-table) {
+        border-radius: 8px;
+        overflow: hidden;
+        
+        th {
+            background-color: #f5f7fa;
+            color: #606266;
+            font-weight: 600;
+        }
+    }
+}
+
+.order-pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
 }
 </style>

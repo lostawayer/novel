@@ -17,7 +17,8 @@ const model = ref<Novel>({
   coverImage: '',
   introduction: '',
   authorAccount: '',
-  authorName: ''
+  authorName: '',
+  price: 0
 })
 
 const emit = defineEmits<{
@@ -43,7 +44,8 @@ function resetForm() {
     coverImage: '',
     introduction: '',
     authorAccount: userStore.account,
-    authorName: userStore.authorName
+    authorName: userStore.authorName,
+    price: 0
   }
 }
 
@@ -117,6 +119,16 @@ defineExpose({
           :rows="4"
           placeholder="请输入书籍简介"
         />
+      </el-form-item>
+      <el-form-item label="书籍价格" prop="price">
+        <el-input-number 
+          v-model="model.price" 
+          :min="0" 
+          :precision="2" 
+          :step="1"
+          placeholder="0表示免费"
+        />
+        <span style="margin-left: 10px; color: #909399; font-size: 12px;">0表示免费，设置价格后非VIP用户需购买才能阅读VIP章节</span>
       </el-form-item>
     </el-form>
     <template #footer>

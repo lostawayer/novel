@@ -25,6 +25,9 @@
         <p>{{ chapter.vipMsg }}</p>
         <div class="vip-actions">
           <el-button type="warning" size="large" @click="goToVip">开通VIP会员</el-button>
+          <el-button v-if="chapter.price && chapter.price > 0" type="success" size="large" @click="goToBuyBook">
+            购买本书 ¥{{ chapter.price }}
+          </el-button>
           <el-button size="large" @click="goBack">返回目录</el-button>
         </div>
       </div>
@@ -126,7 +129,45 @@ const goToVip = () => {
     router.push('/login')
     return
   }
-  router.push('/index/center')
+  router.push('/index/center?tab=vip')
+}
+
+const goToBuyBook = async () => {
+  if (!userStore.isLoggedIn) {
+    ElMessage.warning('请先登录')
+    router.push('/login')
+    return
+  }
+  
+  try {
+    const { ElMessageBox } = await import('element-plus')
+    await ElMessageBox.confirm(
+      `确认购买《${chapter.value?.xiaoshuomingcheng}》？价格：¥${chapter.value?.price}`,
+      '购买书籍',
+      { confirmButtonText: '去支付', cancelButtonText: '取消', type: 'info' }
+    )
+    
+    const { post } = await import('@/utils/request')
+    const res = await post('/alipay/createBookOrder', {
+      userId: userStore.userInfo?.id,
+      bookId: novelId.value
+    })
+    
+    if (res.code === 0 && res.data?.payForm) {
+      const div = document.createElement('div')
+      div.innerHTML = res.data.payForm
+      document.body.appendChild(div)
+      const form = div.querySelector('form')
+      if (form) form.submit()
+    } else {
+      ElMessage.error(res.msg || '创建订单失败')
+    }
+  } catch (e: any) {
+    if (e !== 'cancel') {
+      console.error('购买失败', e)
+      ElMessage.error('购买失败')
+    }
+  }
 }
 
 const goBack = () => {

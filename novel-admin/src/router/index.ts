@@ -97,6 +97,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/admin/NewsListView.vue'),
         meta: { title: '公告信息', requireAdmin: true }
       },
+      {
+        path: 'orderList',
+        name: 'orderList',
+        component: () => import('@/views/admin/OrderListView.vue'),
+        meta: { title: '订单管理', requireAdmin: true }
+      },
       // 通用功能
       {
         path: 'profile',

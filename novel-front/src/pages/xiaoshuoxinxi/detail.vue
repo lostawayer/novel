@@ -20,6 +20,18 @@
               <el-icon><Star /></el-icon>
               {{ isCollected ? '已收藏' : '收藏' }}
             </el-button>
+            <!-- 购买书籍按钮 -->
+            <el-button 
+              v-if="novel.jiage && novel.jiage > 0 && !isPurchased && userStore.userInfo?.vip !== '是'"
+              type="success" 
+              @click="handleBuyBook"
+              :loading="buying"
+            >
+              <el-icon><ShoppingCart /></el-icon>
+              购买本书 ¥{{ novel.jiage }}
+            </el-button>
+            <el-tag v-if="isPurchased" type="success" size="large">已购买</el-tag>
+            <el-tag v-if="userStore.userInfo?.vip === '是'" type="warning" size="large">VIP免费阅读</el-tag>
           </div>
         </div>
       </template>
@@ -84,8 +96,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
-import { User, Collection, View, Star } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { User, Collection, View, Star, ShoppingCart } from '@element-plus/icons-vue'
 import { get, post } from '@/utils/request'
 import { useUserStore } from '@/store'
 import { getImageUrl } from '@/common/system'
@@ -98,6 +110,8 @@ const novel = ref<any>(null)
 const chapters = ref<any[]>([])
 const comments = ref<any[]>([])
 const isCollected = ref(false)
+const isPurchased = ref(false)
+const buying = ref(false)
 const commentContent = ref('')
 const detailLoading = ref(false)
 
@@ -175,6 +189,64 @@ const checkCollected = async () => {
     }
   } catch (e) {
     console.error('检查收藏状态失败', e)
+  }
+}
+
+// 检查是否已购买
+const checkPurchased = async () => {
+  if (!userStore.isLoggedIn) return
+  
+  const id = route.query.id
+  try {
+    const res = await get('/xiaoshuoxinxi/book/purchased', {
+      userId: userStore.userInfo?.id,
+      bookId: id
+    })
+    if (res.code === 0 && res.data?.purchased) {
+      isPurchased.value = true
+    }
+  } catch (e) {
+    console.error('检查购买状态失败', e)
+  }
+}
+
+// 购买书籍
+const handleBuyBook = async () => {
+  if (!userStore.isLoggedIn) {
+    ElMessage.warning('请先登录')
+    router.push('/login')
+    return
+  }
+  
+  try {
+    await ElMessageBox.confirm(
+      `确认购买《${novel.value?.xiaoshuomingcheng}》？价格：¥${novel.value?.jiage}`,
+      '购买书籍',
+      { confirmButtonText: '去支付', cancelButtonText: '取消', type: 'info' }
+    )
+    
+    buying.value = true
+    const res = await post('/alipay/createBookOrder', {
+      userId: userStore.userInfo?.id,
+      bookId: route.query.id
+    })
+    
+    if (res.code === 0 && res.data?.payForm) {
+      const div = document.createElement('div')
+      div.innerHTML = res.data.payForm
+      document.body.appendChild(div)
+      const form = div.querySelector('form')
+      if (form) form.submit()
+    } else {
+      ElMessage.error(res.msg || '创建订单失败')
+    }
+  } catch (e: any) {
+    if (e !== 'cancel') {
+      console.error('购买失败', e)
+      ElMessage.error('购买失败')
+    }
+  } finally {
+    buying.value = false
   }
 }
 
@@ -263,6 +335,43 @@ onMounted(() => {
   loadChapters()
   loadComments()
   checkCollected()
+  checkPurchased()
+  
+  // 处理购买回调
+  console.log('页面加载，完整URL:', window.location.href)
+  console.log('URL参数:', route.query)
+  if (route.query.buyResult === 'success') {
+    // 支付宝回调的订单号参数名是 out_trade_no
+    // 可能是数组（URL中有重复参数），取第一个值
+    let outTradeNo = route.query.out_trade_no
+    if (Array.isArray(outTradeNo)) {
+      outTradeNo = outTradeNo[0]
+    }
+    outTradeNo = (outTradeNo as string) || ''
+    
+    console.log('购买回调，订单号:', outTradeNo)
+    if (outTradeNo) {
+      console.log('调用确认接口: /alipay/bookReturn?out_trade_no=' + outTradeNo)
+      get('/alipay/bookReturn', { out_trade_no: outTradeNo }).then((res) => {
+        console.log('确认购买结果:', res)
+        if (res.code === 0) {
+          isPurchased.value = true
+          ElMessage.success('🎉 购买成功！现在可以阅读全部章节了')
+        } else {
+          checkPurchased()
+          ElMessage.warning(res.msg || '订单确认中，请稍后刷新页面')
+        }
+      }).catch(e => {
+        console.error('确认购买失败:', e)
+        checkPurchased()
+        ElMessage.warning('订单确认中，请稍后刷新页面')
+      })
+    } else {
+      console.log('没有订单号，刷新购买状态')
+      checkPurchased()
+      ElMessage.success('🎉 购买成功！')
+    }
+  }
 })
 </script>
 

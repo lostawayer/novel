@@ -47,7 +47,7 @@ public class NovelFrontController {
         
         StringBuilder sql = new StringBuilder("SELECT id, NOVEL_NAME as xiaoshuomingcheng, CATEGORY_NAME as xiaoshuoleixing, ");
         sql.append("PICTURE as fengmian, DESCRIPTION as jianjie, AUTHOR_NAME as zuozhe, ");
-        sql.append("CLICK_TIME as clicknum, PUBLISH_TIME as addtime, ACCOUNT as jiage ");
+        sql.append("CLICK_TIME as clicknum, PUBLISH_TIME as addtime, PRICE as jiage ");
         sql.append("FROM novel_info WHERE 1=1");
         
         StringBuilder countSql = new StringBuilder("SELECT COUNT(*) FROM novel_info WHERE 1=1");
@@ -96,7 +96,7 @@ public class NovelFrontController {
         try {
             String sql = "SELECT id, NOVEL_NAME as xiaoshuomingcheng, CATEGORY_NAME as xiaoshuoleixing, " +
                     "PICTURE as fengmian, DESCRIPTION as jianjie, AUTHOR_NAME as zuozhe, " +
-                    "PUBLISH_TIME as addtime, ACCOUNT as jiage " +
+                    "PUBLISH_TIME as addtime, PRICE as jiage " +
                     "FROM novel_info WHERE id = ?";
             Map<String, Object> data = jdbcTemplate.queryForMap(sql, id);
             
@@ -139,7 +139,7 @@ public class NovelFrontController {
         try {
             String sql = "SELECT c.id, c.CHAPTER_NUM as zhangjiebianhao, c.CHAPTER_TITLE as zhangjiemingcheng, " +
                     "c.CONTENT as neirong, c.VIP_READ as vipRead, c.REF_ID as novelId, " +
-                    "n.NOVEL_NAME as xiaoshuomingcheng " +
+                    "n.NOVEL_NAME as xiaoshuomingcheng, n.PRICE as price " +
                     "FROM novel_chapter c " +
                     "LEFT JOIN novel_info n ON c.REF_ID = n.id " +
                     "WHERE c.id = ?";
@@ -147,11 +147,13 @@ public class NovelFrontController {
             
             // VIP章节权限检查
             if ("是".equals(chapter.get("vipRead"))) {
-                boolean isVip = checkUserVip(userId);
-                if (!isVip) {
+                Long novelId = ((Number) chapter.get("novelId")).longValue();
+                boolean canRead = checkReadPermission(userId, novelId);
+                
+                if (!canRead) {
                     chapter.put("neirong", null);
                     chapter.put("needVip", true);
-                    chapter.put("vipMsg", "本章节为VIP专享内容，请先购买会员后阅读");
+                    chapter.put("vipMsg", "本章节为VIP专享内容，开通VIP或购买本书后可阅读");
                 } else {
                     chapter.put("needVip", false);
                 }
@@ -161,7 +163,8 @@ public class NovelFrontController {
             
             return FrontResult.ok(chapter);
         } catch (Exception e) {
-            return FrontResult.error("章节不存在");
+            e.printStackTrace();
+            return FrontResult.error("章节不存在: " + e.getMessage());
         }
     }
 
@@ -217,6 +220,77 @@ public class NovelFrontController {
             return "是".equals(user.get("VIP"));
         } catch (Exception e) {
             return false;
+        }
+    }
+    
+    /**
+     * 检查用户是否有阅读权限（VIP或已购买该书）
+     */
+    private boolean checkReadPermission(Long userId, Long bookId) {
+        if (userId == null) return false;
+        
+        // 先检查是否是VIP（优先级最高）
+        try {
+            Map<String, Object> user = jdbcTemplate.queryForMap(
+                "SELECT VIP, VIP_EXPIRE_TIME FROM reader WHERE id = ?", userId);
+            
+            if ("是".equals(user.get("VIP"))) {
+                // 检查VIP是否过期
+                Object expireTime = user.get("VIP_EXPIRE_TIME");
+                if (expireTime == null) {
+                    // 没有设置过期时间，视为永久VIP
+                    return true;
+                }
+                java.time.LocalDateTime expire;
+                if (expireTime instanceof java.sql.Timestamp) {
+                    expire = ((java.sql.Timestamp) expireTime).toLocalDateTime();
+                } else if (expireTime instanceof java.time.LocalDateTime) {
+                    expire = (java.time.LocalDateTime) expireTime;
+                } else {
+                    return true; // 无法解析，默认允许
+                }
+                if (expire.isAfter(java.time.LocalDateTime.now())) {
+                    return true; // VIP未过期
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("检查VIP状态失败: " + e.getMessage());
+        }
+        
+        // 检查是否已购买该书
+        try {
+            Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM user_book_purchase WHERE USER_ID = ? AND BOOK_ID = ? AND STATUS = 'PAID'",
+                Integer.class, userId, bookId
+            );
+            return count != null && count > 0;
+        } catch (Exception e) {
+            // 表可能不存在，忽略错误
+            System.out.println("检查购买记录失败（表可能不存在）: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * 检查用户是否已购买某本书
+     */
+    @GetMapping("/book/purchased")
+    @Operation(summary = "检查是否已购买书籍")
+    public Map<String, Object> checkPurchased(
+            @RequestParam Long userId,
+            @RequestParam Long bookId) {
+        try {
+            Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM user_book_purchase WHERE USER_ID = ? AND BOOK_ID = ? AND STATUS = 'PAID'",
+                Integer.class, userId, bookId
+            );
+            boolean purchased = count != null && count > 0;
+            
+            Map<String, Object> data = new HashMap<>();
+            data.put("purchased", purchased);
+            return FrontResult.ok(data);
+        } catch (Exception e) {
+            return FrontResult.error("查询失败");
         }
     }
 

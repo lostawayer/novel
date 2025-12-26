@@ -117,8 +117,27 @@ public class ReaderFrontController {
         try {
             Map<String, Object> user = jdbcTemplate.queryForMap(
                 "SELECT id, USERNAME as yonghuming, NICKNAME as nicheng, REAL_NAME as xingming, " +
-                "GENDER as xingbie, AVATAR as touxiang, EMAIL as youxiang, PHONE as shouji, VIP as vip " +
+                "GENDER as xingbie, AVATAR as touxiang, EMAIL as youxiang, PHONE as shouji, " +
+                "VIP as vip, VIP_EXPIRE_TIME as vipExpireTime " +
                 "FROM reader WHERE id = ?", userId);
+            
+            // 检查VIP是否过期
+            Object expireTime = user.get("vipExpireTime");
+            if ("是".equals(user.get("vip")) && expireTime != null) {
+                LocalDateTime expire;
+                if (expireTime instanceof java.sql.Timestamp) {
+                    expire = ((java.sql.Timestamp) expireTime).toLocalDateTime();
+                } else {
+                    expire = (LocalDateTime) expireTime;
+                }
+                
+                if (expire.isBefore(LocalDateTime.now())) {
+                    // VIP已过期，更新状态
+                    jdbcTemplate.update("UPDATE reader SET VIP = '否' WHERE id = ?", userId);
+                    user.put("vip", "否");
+                }
+            }
+            
             return FrontResult.ok(user);
         } catch (Exception e) {
             return FrontResult.error("用户不存在");

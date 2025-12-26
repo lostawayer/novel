@@ -12,6 +12,7 @@ export interface Novel {
   authorName?: string
   publishTime?: string
   clickCount?: number
+  price?: number  // 书籍价格
 }
 
 // 书籍章节

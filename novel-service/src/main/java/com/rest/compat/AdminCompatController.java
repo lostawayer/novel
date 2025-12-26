@@ -151,7 +151,7 @@ public class AdminCompatController {
         String safeSort = SqlSafeUtil.safeSortField(sort, "id");
         String safeOrder = SqlSafeUtil.safeOrder(order);
         
-        StringBuilder sql = new StringBuilder("SELECT id, NOVEL_NAME, CATEGORY_NAME, PICTURE, DESCRIPTION, ACCOUNT, AUTHOR_NAME, PUBLISH_TIME, CLICK_TIME, ADD_TIME FROM novel_info WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT id, NOVEL_NAME, CATEGORY_NAME, PICTURE, DESCRIPTION, ACCOUNT, AUTHOR_NAME, PUBLISH_TIME, CLICK_TIME, ADD_TIME, PRICE FROM novel_info WHERE 1=1");
         StringBuilder countSql = new StringBuilder("SELECT COUNT(*) FROM novel_info WHERE 1=1");
         List<Object> params = new ArrayList<>();
         
@@ -188,7 +188,7 @@ public class AdminCompatController {
     public Map<String, Object> novelInfo(@PathVariable Long id) {
         try {
             Map<String, Object> data = jdbcTemplate.queryForMap(
-                "SELECT id, NOVEL_NAME, CATEGORY_NAME, PICTURE, DESCRIPTION, ACCOUNT, AUTHOR_NAME, PUBLISH_TIME, CLICK_TIME, ADD_TIME FROM novel_info WHERE id = ?", id);
+                "SELECT id, NOVEL_NAME, CATEGORY_NAME, PICTURE, DESCRIPTION, ACCOUNT, AUTHOR_NAME, PUBLISH_TIME, CLICK_TIME, ADD_TIME, PRICE FROM novel_info WHERE id = ?", id);
             return CompatResult.ok(data);
         } catch (Exception e) {
             return CompatResult.error("书籍不存在");
@@ -214,9 +214,9 @@ public class AdminCompatController {
     public Map<String, Object> novelUpdate(@RequestBody Map<String, Object> data) {
         try {
             jdbcTemplate.update(
-                "UPDATE novel_info SET NOVEL_NAME=?, CATEGORY_NAME=?, PICTURE=?, DESCRIPTION=? WHERE id=?",
+                "UPDATE novel_info SET NOVEL_NAME=?, CATEGORY_NAME=?, PICTURE=?, DESCRIPTION=?, PRICE=? WHERE id=?",
                 data.get("novelName"), data.get("categoryName"), data.get("picture"),
-                data.get("description"), data.get("id"));
+                data.get("description"), data.get("price"), data.get("id"));
             return CompatResult.ok("更新成功");
         } catch (Exception e) {
             return CompatResult.error(e.getMessage());

@@ -17,7 +17,8 @@ import {
   Bell,
   Setting,
   Document,
-  Comment
+  Comment,
+  Wallet
 } from '@element-plus/icons-vue'
 
 const userStore = loginUserStore()
@@ -67,7 +68,8 @@ const adminMenuGroups = [
     title: '系统管理',
     items: [
       { index: '/main/configList', icon: Setting, title: '轮播图管理' },
-      { index: '/main/newsList', icon: Bell, title: '公告信息' }
+      { index: '/main/newsList', icon: Bell, title: '公告信息' },
+      { index: '/main/orderList', icon: Wallet, title: '订单管理' }
     ]
   }
 ]
